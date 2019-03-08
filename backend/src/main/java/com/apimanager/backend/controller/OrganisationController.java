@@ -4,6 +4,7 @@ import com.apimanager.backend.dto.OrganisationDTO;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
+import com.apimanager.backend.entity.UserEnitity;
 import com.apimanager.backend.service.OrganisationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/organisation")
@@ -27,6 +30,19 @@ public class OrganisationController {
       OrganisationDTO organisationDTO = new OrganisationDTO();
       BeanUtils.copyProperties(organisation,organisationDTO);
       responseDTO.setResponse(organisationDTO);
+      responseDTO.setSuccess(true);
+    }catch (Exception e){
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage(e.getMessage());
+    }
+    return responseDTO;
+  }
+
+  @PostMapping("/getUserOrganisation")
+  public ResponseDTO<List<Organisation>> getUserOrganisation(@RequestBody RequestDTO<UserEnitity> requestDTO){
+    ResponseDTO<List<Organisation>> responseDTO = new ResponseDTO<>();
+    try {
+      responseDTO.setResponse(organisationService.getUserOrganisation(requestDTO.getRequest().getUserId()));
       responseDTO.setSuccess(true);
     }catch (Exception e){
       responseDTO.setSuccess(false);

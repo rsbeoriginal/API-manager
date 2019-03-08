@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
 public class ProjectServiceImpl implements ProjectService {
@@ -18,5 +20,10 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public Project addProject(Project project) {
     return projectRepository.save(project);
+  }
+
+  @Override
+  public List<Project> getProjectByOrganisation(String organisationId) {
+    return projectRepository.getProjectByOrganisation(organisationId);
   }
 }

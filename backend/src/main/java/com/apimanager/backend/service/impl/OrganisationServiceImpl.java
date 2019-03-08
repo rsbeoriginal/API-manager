@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
 public class OrganisationServiceImpl implements OrganisationService {
@@ -18,5 +20,10 @@ public class OrganisationServiceImpl implements OrganisationService {
   @Override
   public Organisation addOrganisation(Organisation organisation) {
     return organisationRepository.save(organisation);
+  }
+
+  @Override
+  public List<Organisation> getUserOrganisation(String userId) {
+    return organisationRepository.getUserOrganisation(userId);
   }
 }
