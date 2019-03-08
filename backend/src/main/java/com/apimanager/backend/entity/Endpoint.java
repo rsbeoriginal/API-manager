@@ -33,7 +33,7 @@ public class Endpoint {
   private long updatedTimestamp;
   @ManyToOne
   @JoinColumn(name = "project_id")
-  private Object project;
+  private Project project;
 
   public static String getEndpointTable() {
     return ENDPOINT_TABLE;
@@ -93,5 +93,21 @@ public class Endpoint {
 
   public void setUpdatedTimestamp(long updatedTimestamp) {
     this.updatedTimestamp = updatedTimestamp;
+  }
+
+  public Project getProject() {
+    return project;
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
+  }
+
+  @Override
+  public String toString() {
+    return "Endpoint{" + "endpointId='" + endpointId + '\'' + ", endpointPath='" + endpointPath + '\''
+        + ", requestMethod='" + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp="
+        + createdTimestamp + ", updatedBy=" + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project="
+        + project + '}';
   }
 }
