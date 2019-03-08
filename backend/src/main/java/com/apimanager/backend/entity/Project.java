@@ -18,6 +18,8 @@ public class Project {
 
   String projectName;
 
+  String projectDescription;
+
   @ManyToOne
   @JoinColumn(name = "organisation_id")
   Organisation organisation;
@@ -56,5 +58,13 @@ public class Project {
 
   public void setCreatedBy(UserEnitity createdBy) {
     this.createdBy = createdBy;
+  }
+
+  public String getProjectDescription() {
+    return projectDescription;
+  }
+
+  public void setProjectDescription(String projectDescription) {
+    this.projectDescription = projectDescription;
   }
 }
