@@ -23,10 +23,14 @@ public class Endpoint {
   private String endpointId;
   private String endpointPath;
   private String requestMethod;
+  @OneToOne
+  @JoinColumn(name = "created_by")
   private Object createdBy;
   private long createdTimestamp;
+  @OneToOne
+  @JoinColumn(name = "updated_by")
   private Object updatedBy;
-  private Object updatedTimestamp;
+  private long updatedTimestamp;
   @ManyToOne
   @JoinColumn(name = "project_id")
   private Object project;
