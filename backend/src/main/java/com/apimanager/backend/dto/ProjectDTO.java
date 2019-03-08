@@ -6,6 +6,7 @@ import com.apimanager.backend.entity.UserEnitity;
 public class ProjectDTO {
   String projectId;
   String projectName;
+  String projectDescription;
   Organisation organisation;
   UserEnitity createdBy;
 
@@ -39,5 +40,13 @@ public class ProjectDTO {
 
   public void setCreatedBy(UserEnitity createdBy) {
     this.createdBy = createdBy;
+  }
+
+  public String getProjectDescription() {
+    return projectDescription;
+  }
+
+  public void setProjectDescription(String projectDescription) {
+    this.projectDescription = projectDescription;
   }
 }
