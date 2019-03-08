@@ -9,7 +9,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.service.spi.InjectService;
 
 @Entity
 @Table(name = Endpoint.ENDPOINT_TABLE)

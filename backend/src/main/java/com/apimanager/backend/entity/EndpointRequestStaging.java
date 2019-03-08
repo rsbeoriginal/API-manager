@@ -7,12 +7,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.json.JSONObject;
 
-@Entity(name = EndpointRequest.ENDPOINT_REQUEST_TABLE)
-public class EndpointRequest {
+@Entity(name = EndpointRequestStaging.ENDPOINT_REQUEST_TABLE)
+public class EndpointRequestStaging {
 
-  public static final String ENDPOINT_REQUEST_TABLE = "ENDPOINT_REQUEST";
+  public static final String ENDPOINT_REQUEST_TABLE = "ENDPOINT_REQUEST_STAGING";
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name="uuid",strategy = "uuid2")
@@ -23,7 +22,6 @@ public class EndpointRequest {
   private String type;
   private boolean isRequestParamRequired;
   private String content;
-  private int version;
 
   public static String getEndpointRequestTable() {
     return ENDPOINT_REQUEST_TABLE;
@@ -69,18 +67,9 @@ public class EndpointRequest {
     isRequestParamRequired = requestParamRequired;
   }
 
-  public int getVersion() {
-    return version;
-  }
-
-  public void setVersion(int version) {
-    this.version = version;
-  }
-
   @Override
   public String toString() {
     return "EndpointRequest{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
-        + ", isRequestParamRequired=" + isRequestParamRequired + ", content='" + content + '\'' + ", version=" + version
-        + '}';
+        + ", isRequestParamRequired=" + isRequestParamRequired + ", content=" + content + '}';
   }
 }

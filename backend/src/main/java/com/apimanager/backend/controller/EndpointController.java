@@ -37,16 +37,15 @@ public class EndpointController {
         responseDTO.setErrorMessage(("Access Denied"));
         responseDTO.setResponse(null);
       }
-    }catch (Exception e)
-    {
-       responseDTO = new ResponseDTO<>();
-       responseDTO.setSuccess(false);
-       responseDTO.setErrorMessage(e.getMessage());
-       responseDTO.setResponse(null);
+    } catch (Exception e) {
+      responseDTO = new ResponseDTO<>();
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage(e.getMessage());
+      responseDTO.setResponse(null);
     }
-
     return responseDTO;
   }
+
 
 
 
