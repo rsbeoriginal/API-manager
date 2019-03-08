@@ -1,3 +1,6 @@
 package com.apimanager.backend.repository;
 
-public interface UserRepository {}
+import com.apimanager.backend.entity.Users;
+import org.springframework.data.repository.CrudRepository;
+
+public interface UserRepository extends CrudRepository<Users,String> {}
