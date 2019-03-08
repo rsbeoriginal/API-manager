@@ -41,7 +41,8 @@ public class EndpointController {
     {
        responseDTO = new ResponseDTO<>();
        responseDTO.setSuccess(false);
-       responseDTO.setErrorMessage("");
+       responseDTO.setErrorMessage(e.getMessage());
+       responseDTO.setResponse(null);
     }
 
     return responseDTO;
