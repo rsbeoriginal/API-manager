@@ -14,8 +14,8 @@ import javax.persistence.Table;
  * Created on 08 March 2019
  */
 @Entity
-@Table(name = EndPointResponse.END_POINT_RESPONSE_TABLE)
-public class EndPointResponse {
+@Table(name = EndPointResponseFragment.END_POINT_RESPONSE_TABLE)
+public class EndPointResponseFragment {
 
   public static final String END_POINT_RESPONSE_TABLE = "endpoint_response";
 

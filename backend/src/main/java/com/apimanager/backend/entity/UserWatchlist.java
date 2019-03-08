@@ -23,7 +23,7 @@ public class UserWatchlist {
   private String watchlistId;
   @ManyToOne
   @JoinColumn(name = "endpoint_fragment")
-  private EndPointResponse endPointFragment;
+  private EndPointResponseFragment endPointFragment;
   @ManyToOne
   @JoinColumn(name = "subscriber")
   private UserEnitity subscriber;
@@ -36,11 +36,11 @@ public class UserWatchlist {
     this.watchlistId = watchlistId;
   }
 
-  public EndPointResponse getEndPointFragment() {
+  public EndPointResponseFragment getEndPointFragment() {
     return endPointFragment;
   }
 
-  public void setEndPointFragment(EndPointResponse endPointFragment) {
+  public void setEndPointFragment(EndPointResponseFragment endPointFragment) {
     this.endPointFragment = endPointFragment;
   }
 

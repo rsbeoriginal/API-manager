@@ -18,7 +18,7 @@ public class EndpointController {
 
   @PostMapping("/")
   public ResponseDTO<EndpointDTO> addEndpoint(@RequestBody RequestDTO<EndpointDTO> requestDTO) {
-    requestDTO.getTokenId()
+    requestDTO.getTokenId();
     Answer answer = new Answer();
     BeanUtils.copyProperties(answerDTO, answer);
     Question question = new Question();
