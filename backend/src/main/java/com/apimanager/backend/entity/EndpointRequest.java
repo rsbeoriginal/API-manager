@@ -21,6 +21,7 @@ public class EndpointRequest {
   @JoinColumn(name = "endpoint_id")
   private Endpoint endpoint;
   private String type;
+  private boolean isRequestParamRequired;
   private JSONObject content;
 
   public static String getEndpointRequestTable() {
@@ -59,9 +60,17 @@ public class EndpointRequest {
     this.content = content;
   }
 
+  public boolean isRequestParamRequired() {
+    return isRequestParamRequired;
+  }
+
+  public void setRequestParamRequired(boolean requestParamRequired) {
+    isRequestParamRequired = requestParamRequired;
+  }
+
   @Override
   public String toString() {
-    return "EndpointRequest{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\'' + ", content="
-        + content + '}';
+    return "EndpointRequest{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
+        + ", isRequestParamRequired=" + isRequestParamRequired + ", content=" + content + '}';
   }
 }
