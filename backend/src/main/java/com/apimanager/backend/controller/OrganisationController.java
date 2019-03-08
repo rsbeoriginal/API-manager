@@ -4,6 +4,9 @@ import com.apimanager.backend.dto.OrganisationDTO;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
+import com.apimanager.backend.service.OrganisationService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/organisation")
 public class OrganisationController {
 
-//  @PostMapping("/addOrganisation")
-//  public ResponseDTO<OrganisationDTO> addOrganisation(@RequestBody RequestDTO<Organisation> requestDTO){
-//
-//  }
+  @Autowired
+  OrganisationService organisationService;
+
+  @PostMapping("/addOrganisation")
+  public ResponseDTO<OrganisationDTO> addOrganisation(@RequestBody RequestDTO<Organisation> requestDTO){
+    ResponseDTO<OrganisationDTO> responseDTO = new ResponseDTO<>();
+    try {
+      Organisation organisation = organisationService.addOrganisation(requestDTO.getRequest());
+      OrganisationDTO organisationDTO = new OrganisationDTO();
+      BeanUtils.copyProperties(organisation,organisationDTO);
+      responseDTO.setResponse(organisationDTO);
+      responseDTO.setSuccess(true);
+    }catch (Exception e){
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage(e.getMessage());
+    }
+    return responseDTO;
+  }
 
 }

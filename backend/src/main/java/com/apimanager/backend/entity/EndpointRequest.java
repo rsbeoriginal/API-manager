@@ -22,7 +22,7 @@ public class EndpointRequest {
   private Endpoint endpoint;
   private String type;
   private boolean isRequestParamRequired;
-  private JSONObject content;
+  private String content;
 
   public static String getEndpointRequestTable() {
     return ENDPOINT_REQUEST_TABLE;
@@ -52,11 +52,11 @@ public class EndpointRequest {
     this.type = type;
   }
 
-  public JSONObject getContent() {
+  public String getContent() {
     return content;
   }
 
-  public void setContent(JSONObject content) {
+  public void setContent(String content) {
     this.content = content;
   }
 
