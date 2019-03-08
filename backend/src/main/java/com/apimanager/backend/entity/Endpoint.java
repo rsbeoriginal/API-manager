@@ -35,4 +35,63 @@ public class Endpoint {
   @JoinColumn(name = "project_id")
   private Object project;
 
+  public static String getEndpointTable() {
+    return ENDPOINT_TABLE;
+  }
+
+  public String getEndpointId() {
+    return endpointId;
+  }
+
+  public void setEndpointId(String endpointId) {
+    this.endpointId = endpointId;
+  }
+
+  public String getEndpointPath() {
+    return endpointPath;
+  }
+
+  public void setEndpointPath(String endpointPath) {
+    this.endpointPath = endpointPath;
+  }
+
+  public String getRequestMethod() {
+    return requestMethod;
+  }
+
+  public void setRequestMethod(String requestMethod) {
+    this.requestMethod = requestMethod;
+  }
+
+  public UserEnitity getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(UserEnitity createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public long getCreatedTimestamp() {
+    return createdTimestamp;
+  }
+
+  public void setCreatedTimestamp(long createdTimestamp) {
+    this.createdTimestamp = createdTimestamp;
+  }
+
+  public UserEnitity getUpdatedBy() {
+    return updatedBy;
+  }
+
+  public void setUpdatedBy(UserEnitity updatedBy) {
+    this.updatedBy = updatedBy;
+  }
+
+  public long getUpdatedTimestamp() {
+    return updatedTimestamp;
+  }
+
+  public void setUpdatedTimestamp(long updatedTimestamp) {
+    this.updatedTimestamp = updatedTimestamp;
+  }
 }
