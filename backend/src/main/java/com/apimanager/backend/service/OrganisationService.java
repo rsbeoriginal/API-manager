@@ -1,3 +1,7 @@
 package com.apimanager.backend.service;
 
-public interface OrganisationService {}
+import com.apimanager.backend.entity.Organisation;
+
+public interface OrganisationService {
+  Organisation addOrganisation(Organisation request);
+}

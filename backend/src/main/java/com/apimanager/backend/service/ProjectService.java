@@ -1,3 +1,7 @@
 package com.apimanager.backend.service;
 
-public interface ProjectService {}
+import com.apimanager.backend.entity.Project;
+
+public interface ProjectService {
+  Project addProject(Project request);
+}
