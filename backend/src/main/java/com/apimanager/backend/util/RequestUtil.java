@@ -3,7 +3,7 @@ package com.apimanager.backend.util;
 public class RequestUtil {
 
 
-  private boolean verifyRequestUtil(String token) {
+  private static boolean verifyRequestUtil(String token) {
     return true;
   }
 
