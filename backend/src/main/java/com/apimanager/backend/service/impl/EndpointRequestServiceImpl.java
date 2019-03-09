@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.apimanager.backend.dto.EndpointRequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
+import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.entity.EndpointRequestStaging;
+import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.repository.EndpointRequestRepository;
 import com.apimanager.backend.repository.EndpointRequestStagingRepository;
 import com.apimanager.backend.service.EndpointRequestService;
@@ -23,6 +25,9 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
 
   @Autowired
   private EndpointRequestRepository endpointRequestRepository;
+
+  @Autowired
+  private EndpointRepository endpointRespository;
 
   @Autowired
   EndpointRequestStagingRepository endpointRequestStagingRepository;
@@ -76,22 +81,36 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   }
 
   @Override
-  public ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(String endpointId)
+  public List<EndpointRequestDTO> publishEndpointRequestChanges(String endpointId)
       throws Exception {
     ResponseDTO<EndpointRequestDTO> responseDTO = new ResponseDTO<>();
-//    //EndpointRequestStaging endpointRequestStaging = endpointRequestStagingRepository.findEndpointRequestStagingByEndpointId(endpointId);
-//    EndpointRequest endpointRequest = new EndpointRequest();
-//    BeanUtils.copyProperties(endpointRequestStaging,endpointRequest);
-//    int maxVersion = endpointRequestRepository.getMaxVersion(endpointRequest.getEndpoint().getId());
-//    endpointRequest.setVersion(maxVersion+1);
-//    EndpointRequest  endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
-//    endpointRequestStagingRepository.delete(endpointRequestStaging.getId());
-//    EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
-//    BeanUtils.copyProperties(endpointRequestResponse,endpointRequestDTO);
-//    responseDTO.setSuccess(true);
-//    responseDTO.setErrorMessage("");
-//    responseDTO.setResponse(endpointRequestDTO);
-    return responseDTO;
+    List<EndpointRequestDTO> endpointRequestDTOS = new ArrayList<>();
+    List<EndpointRequestStaging> endpointRequestStagings = endpointRequestStagingRepository.selectEndpointRequestStagingByEndpointId(endpointId);
+
+    int count=0;
+    int maxVersion=0;
+    for(EndpointRequestStaging endpointRequestStaging:endpointRequestStagings){
+      EndpointRequest endpointRequest = new EndpointRequest();
+      BeanUtils.copyProperties(endpointRequestStaging,endpointRequest);
+      maxVersion = endpointRequestRepository.getMaxVersion(endpointRequest.getEndpoint().getId());
+      if(count==0) {
+        endpointRequest.setVersion(maxVersion + 1);
+      }else {
+        endpointRequest.setVersion(maxVersion);
+      }
+      EndpointRequest  endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
+      EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
+      BeanUtils.copyProperties(endpointRequestResponse,endpointRequestDTO);
+      endpointRequestDTOS.add(endpointRequestDTO);
+      count++;
+    }
+    if(endpointRequestStagings.size()!=0){
+      Endpoint endpoint = endpointRespository.findOne(endpointId);
+      endpoint.setCurrentVersion(maxVersion);
+      endpointRespository.save(endpoint);
+    }
+
+    return endpointRequestDTOS;
 
   }
 }
