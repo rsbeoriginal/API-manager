@@ -1,5 +1,14 @@
 package com.apimanager.backend.controller;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apimanager.backend.dto.EndpointRequestDTO;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
+import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.service.EndpointRequestService;
 import com.apimanager.backend.util.RequestUtil;
@@ -27,15 +37,46 @@ public class EndpointRequestController {
   public static final String BASE_PATH = "/endpointRequest";
 
 
-  @PostMapping("/")
-  public ResponseDTO<EndpointRequestDTO> addEndpointRequest(@RequestBody RequestDTO<EndpointRequestDTO> requestDTO) {
-    ResponseDTO<EndpointRequestDTO> responseDTO;
+  @PostMapping("/{endpointId}/{type}")
+  public ResponseDTO<List<EndpointRequestDTO>> addEndpointRequest(@RequestBody RequestDTO<HashMap<String,Object>> requestDTO, @PathVariable("endpointId") String endpointId,@PathVariable("type") String type) {
+    ResponseDTO<List<EndpointRequestDTO>> responseDTO;
+    List<EndpointRequestDTO> list = new ArrayList<>();
+    System.out.println(requestDTO.getRequest().toString());
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
-        EndpointRequest endpointRequest = new EndpointRequest();
-        BeanUtils.copyProperties(requestDTO.getRequest(), endpointRequest);
-        endpointRequest.setVersion(1);
-        responseDTO = endpointRequestService.addEndpointRequest(endpointRequest);
+        if(type.equals("param")){
+          JSONObject jsonObject = new JSONObject(requestDTO.getRequest());
+          Iterator<String> keys = jsonObject.keys();
+          while(keys.hasNext()) {
+            EndpointRequest endpointRequest = new EndpointRequest();
+            String key = keys.next();
+            String paramRequired = (String) jsonObject.get(key);
+            endpointRequest.setVersion(1);
+            endpointRequest.setContent(key);
+            endpointRequest.setRequestParamRequired(Boolean.valueOf(paramRequired));
+            Endpoint endpoint = new Endpoint();
+            endpoint.setId(endpointId);
+            endpointRequest.setEndpoint(endpoint);
+            endpointRequest.setType("param");
+            list.add(endpointRequestService.addEndpointRequest(endpointRequest));
+          }
+        }else
+        {
+          EndpointRequest endpointRequest = new EndpointRequest();
+          String jsonString = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
+          endpointRequest.setType("body");
+          Endpoint endpoint = new Endpoint();
+          endpoint.setId(endpointId);
+          endpointRequest.setEndpoint(endpoint);
+          endpointRequest.setRequestParamRequired(false);
+          endpointRequest.setContent(jsonString);
+          endpointRequest.setVersion(1);
+          list.add(endpointRequestService.addEndpointRequest(endpointRequest));
+        }
+        responseDTO = new ResponseDTO<>();
+        responseDTO.setSuccess(true);
+        responseDTO.setErrorMessage((""));
+        responseDTO.setResponse(list);
       } else {
         responseDTO = new ResponseDTO<>();
         responseDTO.setSuccess(false);
@@ -104,14 +145,13 @@ public class EndpointRequestController {
 
 
   //publish changes
-  @PostMapping("/publish")
-  public ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(@RequestBody RequestDTO<EndpointRequestDTO> requestDTO) {
+  @PostMapping("/publish/{endpointId}")
+  public ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(@RequestBody RequestDTO<Void> requestDTO, @PathVariable("endpointId") String endpointId) {
     ResponseDTO<EndpointRequestDTO> responseDTO;
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
         EndpointRequest endpointRequest = new EndpointRequest();
-        BeanUtils.copyProperties(requestDTO.getRequest(), endpointRequest);
-        responseDTO = endpointRequestService.publishEndpointRequestChanges(endpointRequest);
+        responseDTO = endpointRequestService.publishEndpointRequestChanges(endpointId);
       } else {
         responseDTO = new ResponseDTO<>();
         responseDTO.setSuccess(false);
@@ -125,6 +165,85 @@ public class EndpointRequestController {
       responseDTO.setResponse(null);
     }
     return responseDTO;
+  }
+
+
+  //data types  -- number, string, array and object
+  public String convertHashMapToJsonObjectForBodyType(HashMap<String,Object> hashMap) {
+    System.out.println("started");
+    JSONObject jsonObject = new JSONObject(hashMap);
+    Iterator<String> keys = jsonObject.keys();
+    while(keys.hasNext()) {
+      String key = keys.next();
+      Object value = jsonObject.get(key);
+      if(value instanceof Number){
+        jsonObject.put(key,0);
+        continue;
+      }
+      if(value instanceof String){
+        jsonObject.put(key,"string");
+        continue;
+      }
+      if(value instanceof Boolean){
+        jsonObject.put(key,true);
+        continue;
+      }
+      System.out.println("after primitives");
+      if(value instanceof JSONArray){
+        System.out.println("should come here");
+        fillJsonArray((JSONArray) value);
+        continue;
+      }
+      if(value instanceof Object){
+        fillJsonObject((JSONObject) value);
+        continue;
+      }
+
+    }
+
+    return jsonObject.toString();
+   // System.out.println(jsonObject.toString());
+
+  }
+
+  private void fillJsonArray(JSONArray jsonArray){
+    System.out.println("in fill json Array");
+    Object value = jsonArray.get(0);
+    if(value instanceof JSONArray){
+      fillJsonArray((JSONArray) value);
+      return;
+    }
+    System.out.println("here after array");
+    if(value  instanceof Object){
+      fillJsonObject((JSONObject) value);
+      return;
+    }
+
+  }
+
+  private void fillJsonObject(JSONObject jsonObject){
+    Iterator<String> keys = jsonObject.keys();
+    while(keys.hasNext()) {
+      String key = keys.next();
+      Object value = jsonObject.get(key);
+      if(value instanceof Number){
+        jsonObject.put(key,0);
+        continue;
+      }
+      if(value instanceof String){
+        jsonObject.put(key,"string");
+        continue;
+      }
+      if(value instanceof JSONArray){
+        fillJsonArray((JSONArray) value);
+        continue;
+      }
+
+      if(value instanceof Object){
+        fillJsonObject((JSONObject) value);
+        continue;
+      }
+    }
   }
 
 

@@ -24,15 +24,11 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   EndpointRequestStagingRepository endpointRequestStagingRepository;
 
   @Override
-  public ResponseDTO<EndpointRequestDTO> addEndpointRequest(EndpointRequest endpointRequest) throws Exception {
+  public EndpointRequestDTO addEndpointRequest(EndpointRequest endpointRequest) throws Exception {
     EndpointRequest endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
     EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
     BeanUtils.copyProperties(endpointRequestResponse,endpointRequestDTO);
-    ResponseDTO<EndpointRequestDTO> responseDTO = new ResponseDTO<>();
-    responseDTO.setSuccess(true);
-    responseDTO.setErrorMessage("");
-    responseDTO.setResponse(endpointRequestDTO);
-    return responseDTO;
+    return endpointRequestDTO;
   }
 
   @Override
@@ -67,12 +63,16 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   }
 
   @Override
-  public ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(EndpointRequest endpointRequest)
+  public ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(String endpointId)
       throws Exception {
     ResponseDTO<EndpointRequestDTO> responseDTO = new ResponseDTO<>();
-    int maxVersion = endpointRequestRepository.getMaxVersion(endpointRequest.getEndpoint().getEndpointId());
+    EndpointRequestStaging endpointRequestStaging = endpointRequestStagingRepository.findEndpointRequestStagingByEndpointId(endpointId);
+    EndpointRequest endpointRequest = new EndpointRequest();
+    BeanUtils.copyProperties(endpointRequestStaging,endpointRequest);
+    int maxVersion = endpointRequestRepository.getMaxVersion(endpointRequest.getEndpoint().getId());
     endpointRequest.setVersion(maxVersion+1);
     EndpointRequest  endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
+    endpointRequestStagingRepository.delete(endpointRequestStaging.getId());
     EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
     BeanUtils.copyProperties(endpointRequestResponse,endpointRequestDTO);
     responseDTO.setSuccess(true);

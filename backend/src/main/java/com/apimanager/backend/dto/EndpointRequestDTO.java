@@ -10,7 +10,7 @@ public class EndpointRequestDTO {
   private String id;
   @ManyToOne
   @JoinColumn(name = "endpoint_id")
-  private EndpointDTO endpoint;
+  private Endpoint endpoint;
   private String type;
   private boolean isRequestParamRequired;
   private String content;
@@ -24,11 +24,11 @@ public class EndpointRequestDTO {
     this.id = id;
   }
 
-  public EndpointDTO getEndpoint() {
+  public Endpoint getEndpoint() {
     return endpoint;
   }
 
-  public void setEndpoint(EndpointDTO endpoint) {
+  public void setEndpoint(Endpoint endpoint) {
     this.endpoint = endpoint;
   }
 
