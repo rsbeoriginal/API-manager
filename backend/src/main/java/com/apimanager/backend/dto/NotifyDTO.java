@@ -1,8 +1,15 @@
 package com.apimanager.backend.dto;
 
+import com.apimanager.backend.entity.Notify;
+
 import java.util.Date;
 
 public class NotifyDTO {
+
+  public static final String MSG_ADD = "Some additions are made to the response of the endpoint you are subscribed";
+  public static final String MSG_CHANGE = "Some changes are made to the response of the endpoint you are subscribed";
+  public static final String MSG_DELETE = "Some deletions are made to the response of the endpoint you are subscribed";
+  public static final String MSG_DEFAULT = "Some changes are made to the response of the endpoint you are subscribed";
 
   String notifyId;
   String projectId;
@@ -84,5 +91,19 @@ public class NotifyDTO {
 
   public void setNotifyMessage(String notifyMessage) {
     this.notifyMessage = notifyMessage;
+  }
+
+  public String generateMessageByType(String notificationType) {
+    switch (notificationType){
+      case Notify.TYPE_ADD:
+        return MSG_ADD;
+      case Notify.TYPE_CHANGE:
+        return MSG_CHANGE;
+      case Notify.TYPE_DELETE:
+        return MSG_DELETE;
+      case Notify.TYPE_DEFAULT:
+        return MSG_DEFAULT;
+    }
+    return null;
   }
 }

@@ -31,7 +31,9 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public Project addProject(Project project) {
-    return projectRepository.save(project);
+    project = projectRepository.save(project);
+    addNewUserToProject(project.getCreatedBy().getUserId(),project.getProjectId(),project.getCreatedBy().getEmailId());
+    return project;
   }
 
   @Override

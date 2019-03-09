@@ -1,6 +1,7 @@
 package com.apimanager.backend.repository;
 
 import com.apimanager.backend.entity.Notify;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +15,8 @@ public interface NotifyRepository extends CrudRepository<Notify,String> {
 
   @Query("FROM Notify WHERE projectId IN (:projectIds)")
   List<Notify> getUserNotifications(@Param("projectIds") List<String> projectIdList);
+
+  @Modifying
+  @Query("UPDATE Notify SET markAsRead = TRUE WHERE notifyId = ?1")
+  void setNotificationAsRead(String notifyId);
 }

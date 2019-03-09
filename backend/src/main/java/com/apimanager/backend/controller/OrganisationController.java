@@ -5,6 +5,7 @@ import com.apimanager.backend.dto.OrganisationUserMappingDto;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
+import com.apimanager.backend.entity.OrganisationUserMapping;
 import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.service.OrganisationService;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -27,7 +29,13 @@ public class OrganisationController {
   public ResponseDTO<OrganisationDTO> addOrganisation(@RequestBody RequestDTO<Organisation> requestDTO){
     ResponseDTO<OrganisationDTO> responseDTO = new ResponseDTO<>();
     try {
-      Organisation organisation = organisationService.addOrganisation(requestDTO.getRequest());
+      Organisation organisation = requestDTO.getRequest();
+      OrganisationUserMapping mapping = new OrganisationUserMapping();
+      mapping.setOrganisation(organisation);
+      mapping.setRole("CREATOR");
+      mapping.setUser(organisation.getCreatedBy());
+      organisation.setOrgUserMapping(Arrays.asList(mapping));
+      organisation = organisationService.addOrganisation(requestDTO.getRequest());
       OrganisationDTO organisationDTO = new OrganisationDTO();
       BeanUtils.copyProperties(organisation,organisationDTO);
       responseDTO.setResponse(organisationDTO);

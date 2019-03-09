@@ -31,7 +31,9 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public Organisation addOrganisation(Organisation organisation) {
-    return organisationRepository.save(organisation);
+    organisation = organisationRepository.save(organisation);
+//    addNewUserToOrg(organisation.getCreatedBy().getUserId(),organisation.getOrganisationId(),organisation.getCreatedBy().getEmailId());
+    return organisation;
   }
 
   @Override

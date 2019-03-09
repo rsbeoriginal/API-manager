@@ -74,4 +74,12 @@ public class Project {
   public void setProjectDescription(String projectDescription) {
     this.projectDescription = projectDescription;
   }
+
+  public List<ProjectUserMapping> getProjectUserMappingList() {
+    return projectUserMappingList;
+  }
+
+  public void setProjectUserMappingList(List<ProjectUserMapping> projectUserMappingList) {
+    this.projectUserMappingList = projectUserMappingList;
+  }
 }
