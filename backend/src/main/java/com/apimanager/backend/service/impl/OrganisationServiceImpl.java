@@ -2,6 +2,7 @@ package com.apimanager.backend.service.impl;
 
 import com.apimanager.backend.dto.OrganisationUserMappingDto;
 import com.apimanager.backend.dto.ResponseDTO;
+import com.apimanager.backend.dto.UserDTO;
 import com.apimanager.backend.entity.Organisation;
 import com.apimanager.backend.entity.OrganisationUserMapping;
 import com.apimanager.backend.entity.UserEntity;
@@ -9,11 +10,14 @@ import com.apimanager.backend.repository.OrganisationRepository;
 import com.apimanager.backend.repository.OrganisationUserRepository;
 import com.apimanager.backend.repository.UserRepository;
 import com.apimanager.backend.service.OrganisationService;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -80,5 +84,18 @@ public class OrganisationServiceImpl implements OrganisationService {
       }
     }
     return response;
+  }
+
+  @Override
+  public List<UserDTO> getAllUserByOrganization(String organizationId) {
+    Organisation organisation = organisationRepository.findOne(organizationId);
+    List<OrganisationUserMapping> organisationUserMappings = organisation.getOrgUserMapping();
+    List<UserDTO> userDTOS = new ArrayList<>();
+    for(OrganisationUserMapping organisationUserMapping:organisationUserMappings){
+      UserDTO userDTO = new UserDTO();
+      BeanUtils.copyProperties(organisationUserMapping.getUser(),userDTO);
+      userDTOS.add(userDTO);
+    }
+    return userDTOS;
   }
 }
