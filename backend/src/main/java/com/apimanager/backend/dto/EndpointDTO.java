@@ -17,6 +17,7 @@ public class EndpointDTO {
   private String description;
   private boolean subscribed;
   private boolean author;
+  private int count;
 
   public String getId() {
     return id;
@@ -114,13 +115,30 @@ public class EndpointDTO {
     this.author = author;
   }
 
+  public int getCount() {
+    return count;
+  }
+
+  public void setCount(int count) {
+    this.count = count;
+  }
+
   @Override
   public String toString() {
-    return "EndpointDTO{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\''
-        + ", requestMethod='" + requestMethod + '\'' + ", createdBy=" + createdBy
-        + ", createdTimestamp=" + createdTimestamp + ", updatedBy=" + updatedBy
-        + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
-        + currentVersion + ", description='" + description + '\'' + ", subscribed=" + subscribed
-        + ", author=" + author + '}';
+    return "EndpointDTO{" +
+            "id='" + id + '\'' +
+            ", endpointPath='" + endpointPath + '\'' +
+            ", requestMethod='" + requestMethod + '\'' +
+            ", createdBy=" + createdBy +
+            ", createdTimestamp=" + createdTimestamp +
+            ", updatedBy=" + updatedBy +
+            ", updatedTimestamp=" + updatedTimestamp +
+            ", project=" + project +
+            ", currentVersion=" + currentVersion +
+            ", description='" + description + '\'' +
+            ", subscribed=" + subscribed +
+            ", author=" + author +
+            ", count=" + count +
+            '}';
   }
 }
