@@ -1,5 +1,6 @@
 package com.apimanager.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -75,6 +76,7 @@ public class Project {
     this.projectDescription = projectDescription;
   }
 
+  @JsonIgnore
   public List<ProjectUserMapping> getProjectUserMappingList() {
     return projectUserMappingList;
   }

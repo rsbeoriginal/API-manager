@@ -45,7 +45,9 @@ public class NotifyController {
         NotifyDTO notifyDTO = new NotifyDTO();
         BeanUtils.copyProperties(notify,notifyDTO);
         notifyDTO.setNotifyMessage(notifyDTO.generateMessageByType(notify.getNotificationType()));
+        notifyDTOList.add(notifyDTO);
       }
+      responseDTO.setResponse(notifyDTOList);
       responseDTO.setSuccess(true);
     }catch (Exception e){
       responseDTO.setSuccess(false);
