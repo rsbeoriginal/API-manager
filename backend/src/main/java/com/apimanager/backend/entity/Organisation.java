@@ -1,5 +1,6 @@
 package com.apimanager.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -7,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 public class Organisation {
@@ -20,7 +23,11 @@ public class Organisation {
 
   @ManyToOne
   @JoinColumn(name = "created_by")
-  UserEnitity createdBy;
+  UserEntity createdBy;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "organisation")
+  private List<OrganisationUserMapping> orgUserMapping;
 
   public String getOrganisationId() {
     return organisationId;
@@ -38,11 +45,19 @@ public class Organisation {
     this.organisationName = organisationName;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
+  }
+
+  public List<OrganisationUserMapping> getOrgUserMapping() {
+    return orgUserMapping;
+  }
+
+  public void setOrgUserMapping(List<OrganisationUserMapping> orgUserMapping) {
+    this.orgUserMapping = orgUserMapping;
   }
 }

@@ -22,20 +22,20 @@ public class UserSubscription {
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name="uuid",strategy = "uuid2")
-  private String subscriberId;
+  private String subscriptionId;
   @ManyToOne()
   @JoinColumn(name = "endpoint")
   private Endpoint endPoint;
   @ManyToOne()
   @JoinColumn(name = "subscriber")
-  private UserEnitity subscriber;
+  private UserEntity subscriber;
 
-  public String getSubscriberId() {
-    return subscriberId;
+  public String getSubscriptionId() {
+    return subscriptionId;
   }
 
-  public void setSubscriberId(String subscriberId) {
-    this.subscriberId = subscriberId;
+  public void setSubscriptionId(String subscriptionId) {
+    this.subscriptionId = subscriptionId;
   }
 
   public Endpoint getEndPoint() {
@@ -46,18 +46,18 @@ public class UserSubscription {
     this.endPoint = endPoint;
   }
 
-  public UserEnitity getSubscriber() {
+  public UserEntity getSubscriber() {
     return subscriber;
   }
 
-  public void setSubscriber(UserEnitity subscriber) {
+  public void setSubscriber(UserEntity subscriber) {
     this.subscriber = subscriber;
   }
 
   @Override
   public String toString() {
     return "UserSubscription{" +
-            "subscriberId='" + subscriberId + '\'' +
+            "subscriptionId='" + subscriptionId + '\'' +
             ", endPoint=" + endPoint +
             ", subscriber=" + subscriber +
             '}';

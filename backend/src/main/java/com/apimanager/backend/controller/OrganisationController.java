@@ -4,7 +4,7 @@ import com.apimanager.backend.dto.OrganisationDTO;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.service.OrganisationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class OrganisationController {
   }
 
   @PostMapping("/getUserOrganisation")
-  public ResponseDTO<List<Organisation>> getUserOrganisation(@RequestBody RequestDTO<UserEnitity> requestDTO){
+  public ResponseDTO<List<Organisation>> getUserOrganisation(@RequestBody RequestDTO<UserEntity> requestDTO){
     ResponseDTO<List<Organisation>> responseDTO = new ResponseDTO<>();
     try {
       responseDTO.setResponse(organisationService.getUserOrganisation(requestDTO.getRequest().getUserId()));

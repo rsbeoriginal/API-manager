@@ -26,7 +26,7 @@ public class Project {
 
   @ManyToOne
   @JoinColumn(name = "created_by")
-  UserEnitity createdBy;
+  UserEntity createdBy;
 
   public String getProjectId() {
     return projectId;
@@ -52,11 +52,11 @@ public class Project {
     this.organisation = organisation;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
   }
 

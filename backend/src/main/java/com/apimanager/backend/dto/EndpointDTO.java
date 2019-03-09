@@ -1,11 +1,6 @@
 package com.apimanager.backend.dto;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
 import com.apimanager.backend.entity.Project;
-import com.apimanager.backend.entity.UserEnitity;
 
 public class EndpointDTO {
 

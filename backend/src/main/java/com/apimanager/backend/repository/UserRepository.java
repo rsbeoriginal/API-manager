@@ -1,11 +1,10 @@
 package com.apimanager.backend.repository;
 
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<UserEnitity,String> {
+public interface UserRepository extends CrudRepository<UserEntity,String> {
 
-  @Query("FROM UserEnitity WHERE (emailId = ?1 AND password = ?2)")
-  UserEnitity checkLogin(String emailId, String password);
+  UserEntity findOneByEmailIdAndPassword(String emailId, String password);
 }
