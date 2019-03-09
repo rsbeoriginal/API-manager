@@ -45,7 +45,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     return organisationRepository.getUserOrganisation(userId);
   }
 
-  public ResponseDTO<OrganisationUserMappingDto> addNewUserToOrg(String userId, String organisationId, String currentUser) {
+  public ResponseDTO<OrganisationUserMappingDto> addNewUserToOrg(String userEmail, String organisationId, String currentUser) {
 
     ResponseDTO<OrganisationUserMappingDto> response = new ResponseDTO<>();
 
@@ -58,7 +58,7 @@ public class OrganisationServiceImpl implements OrganisationService {
       response.setSuccess(false);
       response.setErrorMessage("UNAUTHORIZED USER");
     } else {
-      UserEntity user = userRepository.findOne(userId);
+      UserEntity user = userRepository.findByEmailId(userEmail);
       if (user == null) {
         response.setSuccess(false);
         response.setErrorMessage("INVALID NEW USER");
@@ -79,7 +79,7 @@ public class OrganisationServiceImpl implements OrganisationService {
           dto.setOrganisationMappingId(mapping.getOrganisationMappingId());
           dto.setOrganisationId(mapping.getOrganisation().getOrganisationId());
           dto.setRole(mapping.getRole());
-          dto.setUserId(mapping.getUser().getUserId());
+          dto.setUserEmail(mapping.getUser().getEmailId());
           response.setSuccess(true);
           response.setResponse(dto);
         }
