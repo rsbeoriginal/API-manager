@@ -45,7 +45,8 @@ public class WatchlistController {
       dto.setEndPointId(endpointId);
       dto.setFragmentPath(path);
       dto.setSubscriberId(userId);
-      return addToWatchList(new RequestDTO<UserWatchlistRequestDTO>(requestDTO.getTokenId(),dto)).getResponse();
+      ResponseDTO<UserWatchlistDTO> resp = addToWatchList(new RequestDTO<UserWatchlistRequestDTO>(requestDTO.getTokenId(),dto));
+      return resp.getResponse();
     }).collect(Collectors.toList());
     ResponseDTO<List<UserWatchlistDTO>> response = new ResponseDTO<>();
     response.setSuccess(true);
