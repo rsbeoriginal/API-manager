@@ -15,7 +15,8 @@ public class EndpointDTO {
   private Project project;
   private int currentVersion;
   private String description;
-
+  private boolean subscribed;
+  private boolean author;
 
   public String getId() {
     return id;
@@ -97,11 +98,29 @@ public class EndpointDTO {
     this.description = description;
   }
 
+  public boolean isSubscribed() {
+    return subscribed;
+  }
+
+  public void setSubscribed(boolean subscribed) {
+    this.subscribed = subscribed;
+  }
+
+  public boolean isAuthor() {
+    return author;
+  }
+
+  public void setAuthor(boolean author) {
+    this.author = author;
+  }
+
   @Override
   public String toString() {
-    return "EndpointDTO{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
-        + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
-        + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
-        + currentVersion + ", description='" + description + '\'' + '}';
+    return "EndpointDTO{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\''
+        + ", requestMethod='" + requestMethod + '\'' + ", createdBy=" + createdBy
+        + ", createdTimestamp=" + createdTimestamp + ", updatedBy=" + updatedBy
+        + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
+        + currentVersion + ", description='" + description + '\'' + ", subscribed=" + subscribed
+        + ", author=" + author + '}';
   }
 }

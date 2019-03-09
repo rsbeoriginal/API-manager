@@ -3,6 +3,7 @@ package com.apimanager.backend.repository;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.entity.UserSubscription;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface SubscribeRepository extends CrudRepository<UserSubscription,Str
 
   UserSubscription findAllBySubscriberAndEndPoint(UserEntity subscriber, Endpoint endpoint);
 
+  @Query("FROM UserSubscription WHERE (subscriber.userId = ?1 AND endPoint.id = ?2)")
+  UserSubscription checkIfUserIsSubscribed(String userId, String endpointId);
 }

@@ -37,7 +37,7 @@ public class WatchlistController {
   }
 
   @PostMapping("/addbulk")
-  public ResponseDTO<List<UserWatchlistDTO>> addToWatchlistBulk(RequestDTO<UserWatchlistBulkRequestDTO> requestDTO) {
+  public ResponseDTO<List<UserWatchlistDTO>> addToWatchlistBulk(@RequestBody RequestDTO<UserWatchlistBulkRequestDTO> requestDTO) {
     String endpointId = requestDTO.getRequest().getEndPointId();
     String userId = requestDTO.getRequest().getSubscriberId();
     List<UserWatchlistDTO> list = Arrays.stream(requestDTO.getRequest().getFragmentPath()).map((path) -> {
