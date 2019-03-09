@@ -1,5 +1,7 @@
 package com.apimanager.backend.service;
 
+import com.apimanager.backend.entity.EndPointResponseFragment;
+import com.apimanager.backend.entity.Endpoint;
 import org.json.JSONObject;
 
 /**
@@ -9,4 +11,5 @@ import org.json.JSONObject;
 public interface EndPointResponseService {
   public void insertEndpointResponse(String endpointId,JSONObject jsonObject);
   public JSONObject fetchEndpointResponse(String endpointId);
+  public EndPointResponseFragment findFragment(Endpoint endPoint, String fragmentPath);
 }

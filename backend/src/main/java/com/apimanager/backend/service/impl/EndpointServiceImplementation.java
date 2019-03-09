@@ -1,19 +1,18 @@
 package com.apimanager.backend.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.apimanager.backend.dto.EndpointDTO;
+import com.apimanager.backend.dto.ResponseDTO;
+import com.apimanager.backend.entity.Endpoint;
+import com.apimanager.backend.repository.EndpointRepository;
+import com.apimanager.backend.service.EndpointService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.apimanager.backend.dto.EndpointDTO;
-import com.apimanager.backend.dto.ResponseDTO;
-import com.apimanager.backend.entity.Endpoint;
-import com.apimanager.backend.repository.EndpointRepository;
-import com.apimanager.backend.service.EndpointService;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
@@ -50,5 +49,10 @@ public class EndpointServiceImplementation implements EndpointService {
     responseDTO.setSuccess(true);
     responseDTO.setErrorMessage("");
     return responseDTO;
+  }
+
+  @Override
+  public Endpoint getEndpoint(String endpointId) {
+    return endpointRepository.findOne(endpointId);
   }
 }
