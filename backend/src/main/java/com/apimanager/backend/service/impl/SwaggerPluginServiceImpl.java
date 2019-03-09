@@ -93,6 +93,7 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
 
         //save EndPoint
 //        saveEndpoint(endpoint);
+        System.out.println("path: " + pathKey);
         try {
           endpointService.addEndpoint(endpoint);
         } catch (Exception e) {
@@ -145,8 +146,12 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
         JSONObject responsesObject = pathObject.getJSONObject(requestMethodKey).getJSONObject("responses");
         String responseString = null;
         try {
-          responseString = getJSONObjectFromDefination(json,
-              responsesObject.optJSONObject("200").optJSONObject("schema").optString("$ref"));
+          if(responsesObject.optJSONObject("200").has("schema")) {
+            responseString = getJSONObjectFromDefination(json,
+                responsesObject.optJSONObject("200").optJSONObject("schema").optString("$ref"));
+          }else{
+            responseString="{}";
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
