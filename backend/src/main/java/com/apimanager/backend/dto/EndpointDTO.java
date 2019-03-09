@@ -14,6 +14,7 @@ public class EndpointDTO {
   private long updatedTimestamp;
   private Project project;
   private int currentVersion;
+  private String description;
 
 
   public String getId() {
@@ -88,11 +89,19 @@ public class EndpointDTO {
     this.currentVersion = currentVersion;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   @Override
   public String toString() {
     return "EndpointDTO{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
         + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
         + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
-        + currentVersion + '}';
+        + currentVersion + ", description='" + description + '\'' + '}';
   }
 }
