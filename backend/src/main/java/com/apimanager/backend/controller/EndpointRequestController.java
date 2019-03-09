@@ -93,7 +93,7 @@ public class EndpointRequestController {
  //add the changes one by one
   @PutMapping("/{endpointId}/{type}")
   public ResponseDTO<List<EndpointRequestDTO>> updateEndpointRequest(@RequestBody RequestDTO<HashMap<String,Object>> requestDTO, @PathVariable("endpointId") String endpointId,@PathVariable("type") String type) {
-    ResponseDTO<EndpointRequestDTO> responseDTO;
+    ResponseDTO<List<EndpointRequestDTO>> responseDTO = new ResponseDTO<>();
     List<EndpointRequestDTO> list = new ArrayList<>();
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
@@ -111,7 +111,6 @@ public class EndpointRequestController {
             endpoint.setId(endpointId);
             endpointRequest.setEndpoint(endpoint);
             endpointRequest.setType("param");
-            endpointRequestService.addEndpointRequest(endpointRequest);
             list.add(endpointRequestService.addEndpointRequestToStagingArea(endpointRequest));
           }
         } else {
@@ -126,20 +125,21 @@ public class EndpointRequestController {
           endpointRequest.setVersion(1);
           list.add(endpointRequestService.addEndpointRequest(endpointRequest));
         }
+        responseDTO.setSuccess(true);
+        responseDTO.setErrorMessage((""));
+        responseDTO.setResponse(list);
 
       } else {
-        responseDTO = new ResponseDTO<>();
         responseDTO.setSuccess(false);
         responseDTO.setErrorMessage(("Access Denied"));
         responseDTO.setResponse(null);
       }
     } catch (Exception e) {
-      responseDTO = new ResponseDTO<>();
       responseDTO.setSuccess(false);
       responseDTO.setErrorMessage(e.getMessage());
       responseDTO.setResponse(null);
     }
-    return null;
+    return responseDTO;
   }
 
 
