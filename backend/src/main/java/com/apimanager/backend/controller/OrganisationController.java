@@ -73,8 +73,11 @@ public class OrganisationController {
   @PostMapping("/getAllUserByOrganization/{organizationId}")
   public ResponseDTO<List<UserDTO>> getAllUserByOrganization(@RequestBody RequestDTO<Void> request,@PathVariable("organizationId") String organizationId) {
     //get list of organizationmappings with respect to oId
-    organisationService.getAllUserByOrganization(organizationId);
-    return null;
+    ResponseDTO<List<UserDTO>> responseDTO = new ResponseDTO<>();
+    responseDTO.setResponse(organisationService.getAllUserByOrganization(organizationId));
+    responseDTO.setSuccess(true);
+    responseDTO.setErrorMessage("");
+    return responseDTO;
   }
 
 
