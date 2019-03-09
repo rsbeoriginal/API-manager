@@ -1,6 +1,7 @@
 package com.apimanager.backend.controller;
 
 import com.apimanager.backend.dto.ProjectDTO;
+import com.apimanager.backend.dto.ProjectUserMappingDto;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
@@ -49,6 +50,14 @@ public class ProjectController {
       responseDTO.setErrorMessage(e.getMessage());
     }
     return responseDTO;
+  }
+
+  @PostMapping("/addUserToProject")
+  public ResponseDTO<ProjectUserMappingDto> addUserOrganisation(@RequestBody RequestDTO<ProjectUserMappingDto> request) {
+    return projectService.addNewUserToProject(
+            request.getRequest().getUserId(),
+            request.getRequest().getProjectId(),
+            request.getTokenId());
   }
 
 }

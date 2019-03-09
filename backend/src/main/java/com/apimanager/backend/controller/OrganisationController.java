@@ -1,6 +1,7 @@
 package com.apimanager.backend.controller;
 
 import com.apimanager.backend.dto.OrganisationDTO;
+import com.apimanager.backend.dto.OrganisationUserMappingDto;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
@@ -49,6 +50,14 @@ public class OrganisationController {
       responseDTO.setErrorMessage(e.getMessage());
     }
     return responseDTO;
+  }
+
+  @PostMapping("/addUserToOrganisation")
+  public ResponseDTO<OrganisationUserMappingDto> addUserOrganisation(@RequestBody RequestDTO<OrganisationUserMappingDto> request) {
+    return organisationService.addNewUserToOrg(
+            request.getRequest().getUserId(),
+            request.getRequest().getOrganisationId(),
+            request.getTokenId());
   }
 
 }
