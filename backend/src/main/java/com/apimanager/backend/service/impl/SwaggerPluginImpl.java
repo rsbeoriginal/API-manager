@@ -22,7 +22,7 @@ public class SwaggerPluginImpl implements SwaggerPlugin {
 
   @Override
   public void downloadEndPointsFromSwagger(String url) {
-    url = "http://localhost:8080";
+    url = "http://localhost:8000";
     String swaggerApiPath = "/v2/api-docs";
     RestTemplate restTemplate = new RestTemplate();
     String json = restTemplate.getForObject(url+swaggerApiPath,String.class);
@@ -56,7 +56,6 @@ public class SwaggerPluginImpl implements SwaggerPlugin {
 
 //        0 -> @RequestParam
 //        1 -> @RequestBody
-
         JSONObject paramType = new JSONObject();
         for (int i=0;i<parametersArray.length();i++){
           JSONObject request = parametersArray.getJSONObject(i);
@@ -64,7 +63,12 @@ public class SwaggerPluginImpl implements SwaggerPlugin {
             if(request.getString("in").contains("body")){
               endpointRequestList.get(1).setType("RequestBody");
 //              endpointRequestList.get(1).setContent(request.getJSONObject("schema").toString());
-              endpointRequestList.get(1).setContent(getJSONObjectFromDefination(request.getJSONObject("schema").getString("$ref")));
+              try {
+                endpointRequestList.get(1).setContent(getJSONObjectFromDefination(json,
+                    request.getJSONObject("schema").getString("$ref")));
+              }catch (Exception e){
+
+              }
             }else if(request.getString("in").contains("query")) {
 //              paramType.put(request.getString("name"),request.getJSONObject("schema"));
               paramType.put(request.getString("name"),request.getBoolean("required"));
@@ -82,6 +86,16 @@ public class SwaggerPluginImpl implements SwaggerPlugin {
         endpointRequestList.get(0).setContent(paramType.toString());
         map.put(endpoint.getEndpointPath(),endpointRequestList);
 
+        //RESPONSES
+        JSONObject responsesObject = pathObject.getJSONObject(requestMethodKey).getJSONObject("responses");
+        String responseString = null;
+        try {
+          responseString = getJSONObjectFromDefination(json,
+              responsesObject.optJSONObject("200").optJSONObject("schema").optString("$ref"));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        System.out.println("response: " + responseString);
       }
     }
 
@@ -97,13 +111,50 @@ public class SwaggerPluginImpl implements SwaggerPlugin {
     return endpointList;
   }
 
-  private String getJSONObjectFromDefination(String string) {
-    JSONObject jsonObject = new JSONObject();
+  private String getJSONObjectFromDefination(String json, String string) throws Exception {
+
+    JSONObject result = new JSONObject();
+
+    JSONObject jsonObject = new JSONObject(json);
     String[] pathArray = string.split("/");
-    Iterator<String> keys = jsonObject.getJSONObject("properties").keys();
+    System.out.println(string);
+    JSONObject schemaObject = jsonObject.getJSONObject("definitions").getJSONObject(pathArray[pathArray.length - 1]);
+    JSONObject propertiesObject = schemaObject.getJSONObject("properties");
+    Iterator<String> keys =propertiesObject.keys();
+
+//    if(schemaObject.getString("type").equals("object")){
+//
+//    }
+
+
     while (keys.hasNext()){
       String name = keys.next();
+      if(propertiesObject.getJSONObject(name).has("type")){
+        switch (propertiesObject.getJSONObject(name).getString("type")){
+          case "string" :
+            result.put(name,"string");
+            break;
+          case "boolean" :
+            result.put(name,true);
+            break;
+          case "integer" :
+            result.put(name,0);
+            break;
+          case "array" :
+//            result.put(name,0);
+//            TODO:HANDLE ARRAY
+            break;
+        }
+      }else if(propertiesObject.getJSONObject(name).has("$ref")){
+        try {
+          result.put(name,new JSONObject(getJSONObjectFromDefination(json,propertiesObject.getJSONObject(name).getString("$ref"))));
+        }catch (Exception e){
+
+        }
+      }
+      System.out.println(name);
     }
-    return jsonObject.toString();
+    System.out.println(result.toString());
+    return result.toString();
   }
 }
