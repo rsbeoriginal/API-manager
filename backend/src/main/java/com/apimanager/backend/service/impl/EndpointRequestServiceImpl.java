@@ -37,11 +37,11 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   public EndpointRequestDTO addEndpointRequestToStagingArea(EndpointRequest endpointRequest) throws Exception {
     EndpointRequestStaging endpointRequestStaging = new EndpointRequestStaging();
     BeanUtils.copyProperties(endpointRequest,endpointRequestStaging);
-    if(endpointRequestStaging.getType().equals("body")){
-      endpointRequestStagingRepository.deleteTypeBody(endpointRequestStaging.getEndpoint().getId());
-    }else {
-      endpointRequestStagingRepository.deleteTypeParam(endpointRequestStaging.getEndpoint().getId());
-    }
+//    if (endpointRequestStaging.getType().equals("body")) {
+//      endpointRequestStagingRepository.deleteTypeBody(endpointRequestStaging.getEndpoint().getId());
+//    } else {
+//      endpointRequestStagingRepository.deleteTypeParam(endpointRequestStaging.getEndpoint().getId());
+//    }
     EndpointRequestStaging endpointRequestStagingResponse = endpointRequestStagingRepository.save(endpointRequestStaging);
     EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
     BeanUtils.copyProperties(endpointRequestStagingResponse, endpointRequestDTO);

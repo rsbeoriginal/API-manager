@@ -1,30 +1,26 @@
 package com.apimanager.backend.dto;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
 import com.apimanager.backend.entity.Project;
 import com.apimanager.backend.entity.UserEnitity;
 
 public class EndpointDTO {
 
-  private String endpointId;
+  private String id;
   private String endpointPath;
   private String requestMethod;
-  private UserDTO createdBy;
+  private UserEnitity createdBy;
   private long createdTimestamp;
-  private UserDTO updatedBy;
+  private UserEnitity updatedBy;
   private long updatedTimestamp;
   private Project project;
 
 
-  public String getEndpointId() {
-    return endpointId;
+  public String getId() {
+    return id;
   }
 
-  public void setEndpointId(String endpointId) {
-    this.endpointId = endpointId;
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getEndpointPath() {
@@ -43,12 +39,8 @@ public class EndpointDTO {
     this.requestMethod = requestMethod;
   }
 
-  public UserDTO getCreatedBy() {
+  public UserEnitity getCreatedBy() {
     return createdBy;
-  }
-
-  public void setCreatedBy(UserDTO createdBy) {
-    this.createdBy = createdBy;
   }
 
   public long getCreatedTimestamp() {
@@ -59,11 +51,15 @@ public class EndpointDTO {
     this.createdTimestamp = createdTimestamp;
   }
 
-  public UserDTO getUpdatedBy() {
+  public void setCreatedBy(UserEnitity createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public UserEnitity getUpdatedBy() {
     return updatedBy;
   }
 
-  public void setUpdatedBy(UserDTO updatedBy) {
+  public void setUpdatedBy(UserEnitity updatedBy) {
     this.updatedBy = updatedBy;
   }
 
