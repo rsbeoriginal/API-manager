@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService {
   @Autowired
   UserRepository userRepository;
 
+
   @Override
   public UserEntity addUser(UserEntity userEnitity) {
     return userRepository.save(userEnitity);
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
       throw new Exception("Invalid credentials");
     }
     return userEnitity;
+  }
+
+  @Override
+  public UserEntity getUser(String userId) {
+    return userRepository.findOne(userId);
   }
 
   private UserEntity checkLogin(UserEntity request) {

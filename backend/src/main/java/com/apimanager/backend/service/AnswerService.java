@@ -6,8 +6,8 @@ import com.apimanager.backend.entity.Answer;
 
 public interface AnswerService {
 
-  Answer saveAnswer(Answer answer);
+  Answer saveAnswer(Answer answer) throws Exception;
 
-  List<Answer> getAnswerByIssue(String issueId);
+  List<Answer> getAnswerByIssue(String issueId) throws Exception;
 
 }

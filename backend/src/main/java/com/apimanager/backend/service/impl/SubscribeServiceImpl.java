@@ -11,6 +11,8 @@ import com.apimanager.backend.repository.UserRepository;
 import com.apimanager.backend.service.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
  * Created on 09 March 2019
  */
 @Service
+@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 public class SubscribeServiceImpl implements SubscribeService {
 
   @Autowired

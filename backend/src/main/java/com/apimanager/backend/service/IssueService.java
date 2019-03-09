@@ -7,8 +7,8 @@ import com.apimanager.backend.entity.Issue;
 
 public interface IssueService {
 
-  Issue addIssue(Issue issue);
+  Issue addIssue(Issue issue) throws Exception;
 
-  List<IssueDTO> getAllIssues(String projectId, String endpointId);
+  List<IssueDTO> getAllIssues(String projectId, String endpointId) throws Exception;
 
 }

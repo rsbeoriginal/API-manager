@@ -6,4 +6,6 @@ public interface UserService {
   UserEntity addUser(UserEntity request);
 
   UserEntity login(UserEntity request) throws Exception;
+
+  UserEntity getUser(String userId);
 }
