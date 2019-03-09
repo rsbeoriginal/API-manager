@@ -1,16 +1,16 @@
 package com.apimanager.backend.dto;
 
 import com.apimanager.backend.entity.Project;
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 
 public class EndpointDTO {
 
   private String id;
   private String endpointPath;
   private String requestMethod;
-  private UserEnitity createdBy;
+  private UserEntity createdBy;
   private long createdTimestamp;
-  private UserEnitity updatedBy;
+  private UserEntity updatedBy;
   private long updatedTimestamp;
   private Project project;
 
@@ -39,7 +39,7 @@ public class EndpointDTO {
     this.requestMethod = requestMethod;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
@@ -51,15 +51,15 @@ public class EndpointDTO {
     this.createdTimestamp = createdTimestamp;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
   }
 
-  public UserEnitity getUpdatedBy() {
+  public UserEntity getUpdatedBy() {
     return updatedBy;
   }
 
-  public void setUpdatedBy(UserEnitity updatedBy) {
+  public void setUpdatedBy(UserEntity updatedBy) {
     this.updatedBy = updatedBy;
   }
 

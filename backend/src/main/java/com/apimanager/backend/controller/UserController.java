@@ -3,7 +3,7 @@ package com.apimanager.backend.controller;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.dto.UserDTO;
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ public class UserController {
   UserService userService;
 
   @PostMapping("/signUp")
-  public ResponseDTO<UserDTO> signUp(@RequestBody RequestDTO<UserEnitity> requestDTO){
+  public ResponseDTO<UserDTO> signUp(@RequestBody RequestDTO<UserEntity> requestDTO){
     ResponseDTO<UserDTO> responseDTO = new ResponseDTO<>();
     try{
-      UserEnitity userEnitity = userService.addUser(requestDTO.getRequest());
+      UserEntity userEnitity = userService.addUser(requestDTO.getRequest());
       UserDTO userDTO = new UserDTO();
       BeanUtils.copyProperties(userEnitity,userDTO);
       responseDTO.setResponse(userDTO);
@@ -36,10 +36,10 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public ResponseDTO<UserDTO> login(@RequestBody RequestDTO<UserEnitity> requestDTO){
+  public ResponseDTO<UserDTO> login(@RequestBody RequestDTO<UserEntity> requestDTO){
     ResponseDTO<UserDTO> responseDTO = new ResponseDTO<>();
     try {
-      UserEnitity userEnitity = userService.login(requestDTO.getRequest());
+      UserEntity userEnitity = userService.login(requestDTO.getRequest());
       UserDTO userDTO = new UserDTO();
       BeanUtils.copyProperties(userEnitity,userDTO);
       responseDTO.setResponse(userDTO);

@@ -1,11 +1,11 @@
 package com.apimanager.backend.dto;
 
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 
 public class OrganisationDTO {
   String organisationId;
   String  organisationName;
-  UserEnitity createdBy;
+  UserEntity createdBy;
 
   public String getOrganisationId() {
     return organisationId;
@@ -23,11 +23,11 @@ public class OrganisationDTO {
     this.organisationName = organisationName;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
   }
 }

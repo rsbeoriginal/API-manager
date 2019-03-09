@@ -4,7 +4,7 @@ import com.apimanager.backend.dto.SwaggerImportDTO;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.entity.Project;
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.repository.EndpointRequestRepository;
 import com.apimanager.backend.service.EndPointResponseService;
@@ -51,7 +51,7 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
     String url = swaggerImportDTO.getUrl();
 //    url = "http://localhost:8000";
     String swaggerApiPath = "/v2/api-docs";
-    UserEnitity createdBy = new UserEnitity();
+    UserEntity createdBy = new UserEntity();
     createdBy.setUserId(swaggerImportDTO.getUserId());
 
     Project project = new Project();
@@ -66,7 +66,7 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
   }
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public List<Endpoint> getEndPointListFromSwagger(String json, UserEnitity createdBy,
+  public List<Endpoint> getEndPointListFromSwagger(String json, UserEntity createdBy,
       Project project) {
     JSONObject jsonObject = new JSONObject(json);
     List<Endpoint> endpointList = new ArrayList<>();

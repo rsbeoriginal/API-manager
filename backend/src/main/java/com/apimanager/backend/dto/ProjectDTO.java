@@ -1,14 +1,14 @@
 package com.apimanager.backend.dto;
 
 import com.apimanager.backend.entity.Organisation;
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 
 public class ProjectDTO {
   String projectId;
   String projectName;
   String projectDescription;
   Organisation organisation;
-  UserEnitity createdBy;
+  UserEntity createdBy;
 
   public String getProjectId() {
     return projectId;
@@ -34,11 +34,11 @@ public class ProjectDTO {
     this.organisation = organisation;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
   }
 

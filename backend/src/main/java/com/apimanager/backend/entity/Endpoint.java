@@ -24,11 +24,11 @@ public class Endpoint {
   private String requestMethod;
   @OneToOne
   @JoinColumn(name = "created_by")
-  private UserEnitity createdBy;
+  private UserEntity createdBy;
   private long createdTimestamp;
   @OneToOne
   @JoinColumn(name = "updated_by")
-  private UserEnitity updatedBy;
+  private UserEntity updatedBy;
   private long updatedTimestamp;
   @ManyToOne
   @JoinColumn(name = "project_id")
@@ -62,11 +62,11 @@ public class Endpoint {
     this.requestMethod = requestMethod;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -78,11 +78,11 @@ public class Endpoint {
     this.createdTimestamp = createdTimestamp;
   }
 
-  public UserEnitity getUpdatedBy() {
+  public UserEntity getUpdatedBy() {
     return updatedBy;
   }
 
-  public void setUpdatedBy(UserEnitity updatedBy) {
+  public void setUpdatedBy(UserEntity updatedBy) {
     this.updatedBy = updatedBy;
   }
 

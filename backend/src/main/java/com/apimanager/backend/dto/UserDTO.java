@@ -5,7 +5,6 @@ public class UserDTO {
   String userId;
   String name;
   String emailId;
-  String password;
 
   public String getUserId() {
     return userId;
@@ -31,11 +30,12 @@ public class UserDTO {
     this.emailId = emailId;
   }
 
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
+  @Override
+  public String toString() {
+    return "UserDTO{" +
+            "userId='" + userId + '\'' +
+            ", name='" + name + '\'' +
+            ", emailId='" + emailId + '\'' +
+            '}';
   }
 }
