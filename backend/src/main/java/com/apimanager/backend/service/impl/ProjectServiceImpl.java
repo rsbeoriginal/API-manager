@@ -32,7 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public Project addProject(Project project) {
     project = projectRepository.save(project);
-    addNewUserToProject(project.getCreatedBy().getUserId(),project.getProjectId(),project.getCreatedBy().getEmailId());
+    //addNewUserToProject(project.getCreatedBy().getUserId(),project.getProjectId(),project.getCreatedBy().getEmailId());
     return project;
   }
 

@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,7 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
     //      } else {
     //        endpointRequestStagingRepository.deleteTypeParam(endpointRequestStaging.getEndpoint().getId());
     //      }
+    endpointRequestStaging.setPublished(false);
     EndpointRequestStaging endpointRequestStagingResponse =
         endpointRequestStagingRepository.save(endpointRequestStaging);
     EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
@@ -115,6 +117,8 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
         endpointRequest.setVersion(maxVersion);
       }
       EndpointRequest endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
+      endpointRequestStaging.setPublished(true);
+      endpointRequestStagingRepository.save(endpointRequestStaging);
       EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
       BeanUtils.copyProperties(endpointRequestResponse, endpointRequestDTO);
       endpointRequestDTOS.add(endpointRequestDTO);
@@ -169,6 +173,14 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
         endpointRequestDTOS.add(endpointRequestDTO);
       }
     return endpointRequestDTOS;
+  }
+
+
+  @Override
+  @Modifying
+  @Transactional
+  public void deleteStaging(String endpointId) throws Exception {
+      endpointRequestStagingRepository.deleteStaging(endpointId);
   }
 
 }
