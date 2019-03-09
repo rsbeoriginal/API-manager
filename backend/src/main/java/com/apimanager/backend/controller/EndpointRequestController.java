@@ -1,17 +1,14 @@
 package com.apimanager.backend.controller;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -94,22 +91,50 @@ public class EndpointRequestController {
 
 
  //add the changes one by one
-  @PutMapping("/")
-  public ResponseDTO<EndpointRequestDTO> updateEndpointRequest(@RequestBody RequestDTO<EndpointRequestDTO> requestDTO) {
-    ResponseDTO<EndpointRequestDTO> responseDTO;
+  @PutMapping("/{endpointId}/{type}")
+  public ResponseDTO<List<EndpointRequestDTO>> updateEndpointRequest(@RequestBody RequestDTO<HashMap<String,Object>> requestDTO, @PathVariable("endpointId") String endpointId,@PathVariable("type") String type) {
+    ResponseDTO<List<EndpointRequestDTO>> responseDTO = new ResponseDTO<>();
+    List<EndpointRequestDTO> list = new ArrayList<>();
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
-        EndpointRequest endpointRequest = new EndpointRequest();
-        BeanUtils.copyProperties(requestDTO.getRequest(), endpointRequest);
-        responseDTO = endpointRequestService.addEndpointRequestToStagingArea(endpointRequest);
+        if(type.equals("param")) {
+          JSONObject jsonObject = new JSONObject(requestDTO.getRequest());
+          Iterator<String> keys = jsonObject.keys();
+          while (keys.hasNext()) {
+            EndpointRequest endpointRequest = new EndpointRequest();
+            String key = keys.next();
+            String paramRequired = (String) jsonObject.get(key);
+            endpointRequest.setVersion(1);
+            endpointRequest.setContent(key);
+            endpointRequest.setRequestParamRequired(Boolean.valueOf(paramRequired));
+            Endpoint endpoint = new Endpoint();
+            endpoint.setId(endpointId);
+            endpointRequest.setEndpoint(endpoint);
+            endpointRequest.setType("param");
+            list.add(endpointRequestService.addEndpointRequestToStagingArea(endpointRequest));
+          }
+        } else {
+          EndpointRequest endpointRequest = new EndpointRequest();
+          String jsonString = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
+          endpointRequest.setType("body");
+          Endpoint endpoint = new Endpoint();
+          endpoint.setId(endpointId);
+          endpointRequest.setEndpoint(endpoint);
+          endpointRequest.setRequestParamRequired(false);
+          endpointRequest.setContent(jsonString);
+          endpointRequest.setVersion(1);
+          list.add(endpointRequestService.addEndpointRequest(endpointRequest));
+        }
+        responseDTO.setSuccess(true);
+        responseDTO.setErrorMessage((""));
+        responseDTO.setResponse(list);
+
       } else {
-        responseDTO = new ResponseDTO<>();
         responseDTO.setSuccess(false);
         responseDTO.setErrorMessage(("Access Denied"));
         responseDTO.setResponse(null);
       }
     } catch (Exception e) {
-      responseDTO = new ResponseDTO<>();
       responseDTO.setSuccess(false);
       responseDTO.setErrorMessage(e.getMessage());
       responseDTO.setResponse(null);
@@ -120,22 +145,23 @@ public class EndpointRequestController {
 
   //get Endpoint Request
   //fetch first from staging area..if no data there then fetch from enpoint request table
-  @GetMapping("/{endpointRequestId}")
-  public ResponseDTO<EndpointRequestDTO> getEndpointRequest(@RequestBody RequestDTO<Void> requestDTO,@PathVariable("endpointId") String endpointId) {
-    ResponseDTO<EndpointRequestDTO> responseDTO;
+  @PostMapping("/get/{endpointId}")
+  public ResponseDTO<List<EndpointRequestDTO>> getEndpointRequest(@RequestBody RequestDTO<Void> requestDTO,@PathVariable("endpointId") String endpointId) {
+    ResponseDTO<List<EndpointRequestDTO>> responseDTO = new ResponseDTO<>();
+    List<EndpointRequestDTO> list = new ArrayList<>();
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
         EndpointRequest endpointRequest = new EndpointRequest();
-        BeanUtils.copyProperties(requestDTO.getRequest(), endpointRequest);
-        responseDTO = endpointRequestService.getEndpointRequest(endpointId);
+        System.out.println(endpointRequestService.getEndpointRequest(endpointId));
+        responseDTO.setResponse(endpointRequestService.getEndpointRequest(endpointId));
+        responseDTO.setSuccess(true);
+        responseDTO.setErrorMessage("");
       } else {
-        responseDTO = new ResponseDTO<>();
         responseDTO.setSuccess(false);
         responseDTO.setErrorMessage(("Access Denied"));
         responseDTO.setResponse(null);
       }
     } catch (Exception e) {
-      responseDTO = new ResponseDTO<>();
       responseDTO.setSuccess(false);
       responseDTO.setErrorMessage(e.getMessage());
       responseDTO.setResponse(null);
