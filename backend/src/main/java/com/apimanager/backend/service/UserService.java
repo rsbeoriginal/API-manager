@@ -1,9 +1,9 @@
 package com.apimanager.backend.service;
 
-import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.entity.UserEntity;
 
 public interface UserService {
-  UserEnitity addUser(UserEnitity request);
+  UserEntity addUser(UserEntity request);
 
-  UserEnitity login(UserEnitity request) throws Exception;
+  UserEntity login(UserEntity request) throws Exception;
 }

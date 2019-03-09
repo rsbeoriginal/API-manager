@@ -24,15 +24,16 @@ public class Endpoint {
   private String requestMethod;
   @OneToOne
   @JoinColumn(name = "created_by")
-  private UserEnitity createdBy;
+  private UserEntity createdBy;
   private long createdTimestamp;
   @OneToOne
   @JoinColumn(name = "updated_by")
-  private UserEnitity updatedBy;
+  private UserEntity updatedBy;
   private long updatedTimestamp;
   @ManyToOne
   @JoinColumn(name = "project_id")
   private Project project;
+  private int currentVersion;
 
   public static String getEndpointTable() {
     return ENDPOINT_TABLE;
@@ -62,11 +63,11 @@ public class Endpoint {
     this.requestMethod = requestMethod;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserEntity getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserEntity createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -78,11 +79,11 @@ public class Endpoint {
     this.createdTimestamp = createdTimestamp;
   }
 
-  public UserEnitity getUpdatedBy() {
+  public UserEntity getUpdatedBy() {
     return updatedBy;
   }
 
-  public void setUpdatedBy(UserEnitity updatedBy) {
+  public void setUpdatedBy(UserEntity updatedBy) {
     this.updatedBy = updatedBy;
   }
 
@@ -102,11 +103,19 @@ public class Endpoint {
     this.project = project;
   }
 
+  public int getCurrentVersion() {
+    return currentVersion;
+  }
+
+  public void setCurrentVersion(int currentVersion) {
+    this.currentVersion = currentVersion;
+  }
+
   @Override
   public String toString() {
-    return "Endpoint{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\''
-        + ", requestMethod='" + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp="
-        + createdTimestamp + ", updatedBy=" + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project="
-        + project + '}';
+    return "Endpoint{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
+        + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
+        + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
+        + currentVersion + '}';
   }
 }
