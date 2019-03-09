@@ -16,4 +16,6 @@ public interface EndpointRequestRepository extends CrudRepository<EndpointReques
 
   @Query(value = "select max(version) from endpoint_request where endpoint_id=?1",nativeQuery = true)
   int getMaxVersion(String endpointId);
+
+  List<EndpointRequest> findEndpointRequestByEndpointIdAndVersion(String endpointId, int version);
 }

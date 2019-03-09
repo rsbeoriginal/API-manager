@@ -12,4 +12,7 @@ import java.util.List;
  */
 public interface SubscribeRepository extends CrudRepository<UserSubscription,String> {
   List<UserSubscription> findAllBySubscriber(UserEntity subsciber);
+
+  //by user_id and endpoint_id fetch, current version
+  UserSubscription findUserSubscriptionBySubscriptionIdAndEndPoint(String subscriptionId, String endpointId);
 }

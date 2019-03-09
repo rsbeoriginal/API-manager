@@ -2,6 +2,8 @@ package com.apimanager.backend.service;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.apimanager.backend.dto.EndpointRequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.EndpointRequest;
@@ -14,5 +16,14 @@ public interface EndpointRequestService {
   List<EndpointRequestDTO> getEndpointRequest(String endpointId) throws Exception;
 
   List<EndpointRequestDTO> publishEndpointRequestChanges(String endpointId) throws Exception;
+
+  boolean changeDetected(JSONObject jsonObject, String endpointId, String type);
+
+  List<EndpointRequestDTO> getEndpointRequestByVersion(String endpointId, int version);
+
+  List<EndpointRequestDTO> getEndpointRequestByUserId(String endpointId, String userId);
+
+  //for user
+  List<EndpointRequestDTO> getCurrentVersionEndpointRequest(String endpointId) throws Exception;
 }
 
