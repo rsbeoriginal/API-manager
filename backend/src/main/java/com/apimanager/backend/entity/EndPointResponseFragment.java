@@ -25,7 +25,7 @@ public class EndPointResponseFragment {
   private String responseId;
 
   @ManyToOne()
-  @JoinColumn(name = "endpoint")
+  @JoinColumn(name = "endpoint_id")
   private Endpoint endPoint;
 
   private String attributePath;
@@ -33,6 +33,8 @@ public class EndPointResponseFragment {
   private String valueType;
 
   private String hash;
+
+  private boolean markedForDelete;
 
 
   public String getResponseId() {
@@ -75,14 +77,24 @@ public class EndPointResponseFragment {
     this.hash = hash;
   }
 
+
+  public boolean isMarkedForDelete() {
+    return markedForDelete;
+  }
+
+  public void setMarkedForDelete(boolean markedForDelete) {
+    this.markedForDelete = markedForDelete;
+  }
+
   @Override
   public String toString() {
-    return "EndPointResponse{" +
+    return "EndPointResponseFragment{" +
             "responseId='" + responseId + '\'' +
             ", endPoint=" + endPoint +
             ", attributePath='" + attributePath + '\'' +
             ", valueType='" + valueType + '\'' +
             ", hash='" + hash + '\'' +
+            ", markedForDelete=" + markedForDelete +
             '}';
   }
 }

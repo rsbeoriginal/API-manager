@@ -1,25 +1,30 @@
 package com.apimanager.backend.dto;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
 import com.apimanager.backend.entity.Project;
 import com.apimanager.backend.entity.UserEnitity;
 
 public class EndpointDTO {
 
-  private String id;
+  private String endpointId;
   private String endpointPath;
   private String requestMethod;
-  private UserEnitity createdBy;
+  private UserDTO createdBy;
   private long createdTimestamp;
-  private UserEnitity updatedBy;
+  private UserDTO updatedBy;
   private long updatedTimestamp;
   private Project project;
 
-  public String getId() {
-    return id;
+
+  public String getEndpointId() {
+    return endpointId;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setEndpointId(String endpointId) {
+    this.endpointId = endpointId;
   }
 
   public String getEndpointPath() {
@@ -38,16 +43,12 @@ public class EndpointDTO {
     this.requestMethod = requestMethod;
   }
 
-  public UserEnitity getCreatedBy() {
+  public UserDTO getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(UserEnitity createdBy) {
+  public void setCreatedBy(UserDTO createdBy) {
     this.createdBy = createdBy;
-  }
-
-  public void setUpdatedBy(UserEnitity updatedBy) {
-    this.updatedBy = updatedBy;
   }
 
   public long getCreatedTimestamp() {
@@ -58,8 +59,12 @@ public class EndpointDTO {
     this.createdTimestamp = createdTimestamp;
   }
 
-  public UserEnitity getUpdatedBy() {
+  public UserDTO getUpdatedBy() {
     return updatedBy;
+  }
+
+  public void setUpdatedBy(UserDTO updatedBy) {
+    this.updatedBy = updatedBy;
   }
 
   public long getUpdatedTimestamp() {
@@ -76,12 +81,5 @@ public class EndpointDTO {
 
   public void setProject(Project project) {
     this.project = project;
-  }
-
-  @Override
-  public String toString() {
-    return "EndpointDTO{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
-        + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
-        + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + '}';
   }
 }

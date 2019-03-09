@@ -8,40 +8,81 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * @author jayjoshi
  * Created on 08 March 2019
  */
 @Service
+@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 public class EndPointResponseServiceImpl implements EndPointResponseService {
   @Autowired
   private EndPointResponseFragmentRepository endPointResponseFragmentRepository;
 
+  @Override
   public JSONObject fetchEndpointResponse(String endpointId) {
-    List<EndPointResponseFragment> fragmentList = endPointResponseFragmentRepository.findByEndPoint(endpointId);
+    Endpoint endpoint = new Endpoint();
+    endpoint.setId(endpointId);
+    List<EndPointResponseFragment> fragmentList = endPointResponseFragmentRepository.findByEndPoint(endpoint);
     JSONObject obj = new JSONObject();
     JSONObject cursorObject = obj;
     for(EndPointResponseFragment fragment : fragmentList) {
       cursorObject = obj;
-      for(String pathFragment : fragment.getAttributePath().split("/")) {
-        if(!cursorObject.has(pathFragment)) {
-          cursorObject.put(pathFragment, new JSONObject());
+      String[] pathFragmentList = fragment.getAttributePath().split("/");
+      for(int index=0;index<pathFragmentList.length - 1 ;index++) {
+        if(!cursorObject.has(pathFragmentList[index])) {
+          cursorObject.put(pathFragmentList[index], new JSONObject());
         }
-        cursorObject = (JSONObject) cursorObject.get(pathFragment);
+        Object tempObject = cursorObject.get(pathFragmentList[index]);
+        if(tempObject instanceof JSONArray) {
+          if(((JSONArray) tempObject).length() == 0) {
+            ((JSONArray) tempObject).put(new JSONObject());
+          }
+          cursorObject = (JSONObject) ( (JSONArray) tempObject ).get(0);
+        } else {
+          cursorObject = (JSONObject) tempObject;
+        }
       }
-      cursorObject.put("type", fragment.getValueType());
-      cursorObject.put("hash", fragment.getHash());
+      String lastKey = pathFragmentList[pathFragmentList.length-1];
+      String[] typeChunk = fragment.getValueType().split("/");
+      if(cursorObject.has(lastKey)) {
+        if("JSONArray".equals(typeChunk[0])
+                &&  ! (cursorObject.get(lastKey) instanceof JSONArray) ){
+          Object existingValue = cursorObject.get(lastKey);
+          cursorObject.put(lastKey,new JSONArray());
+          ((JSONArray)cursorObject.get(lastKey)).put(existingValue);
+        }
+      } else if("JSONObject".equals(typeChunk[0])) {
+        cursorObject.put(lastKey,new JSONObject());
+      } else if("JSONArray".equals(typeChunk[0])) {
+        cursorObject.put(lastKey,new JSONArray());
+        if(typeChunk.length>1 && (!"JSONObject".equals(typeChunk[1])) && (!"JSONArray".equals(typeChunk[1])) ) {
+          ((JSONArray)cursorObject.get(lastKey)).put(typeChunk[1]);
+        }
+      } else {
+        cursorObject.put(lastKey,fragment.getValueType());
+      }
     }
     return obj;
   }
 
-  public void insertEndpointResponse(Endpoint endpoint,JSONObject jsonObject) {
+  @Override
+  public void insertEndpointResponse(String endpointId,JSONObject jsonObject) {
+
+    Endpoint endpoint = new Endpoint();
+    endpoint.setId(endpointId);
+
+    endPointResponseFragmentRepository.markForDelete(endpoint.getId());
+
     List<EndPointResponseFragment> fragmentList = new LinkedList<>();
     Stack<Object> dfsStack = new Stack<>();
     Stack<String> pathStack = new Stack<>();
@@ -51,6 +92,24 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
       Object currentObj = dfsStack.pop();
       String currentPath = pathStack.pop();
 
+      EndPointResponseFragment fragment;
+      Optional<EndPointResponseFragment> repoResponseOpt = endPointResponseFragmentRepository.findOneByEndPointAndAttributePath(endpoint,currentPath);
+      if(repoResponseOpt.isPresent()) {
+        fragment = repoResponseOpt.get();
+      } else {
+        fragment = new EndPointResponseFragment();
+      }
+      fragment.setAttributePath(currentPath);
+      fragment.setValueType(currentObj.getClass().getSimpleName());
+      fragment.setHash(""+currentObj.hashCode());
+      fragment.setEndPoint(endpoint);
+      fragmentList.add(fragment);
+
+      if(currentObj instanceof JSONArray) {
+        currentObj=  ((JSONArray) currentObj).get(0);
+        fragment.setValueType(fragment.getValueType()+"/"+currentObj.getClass().getSimpleName());
+      }
+
       if(currentObj instanceof JSONObject) {
         Iterator<String> fieldIter = ((JSONObject)currentObj).keys();
         String currentField;
@@ -59,18 +118,18 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
           pathStack.push(currentPath+"/"+currentField);
           dfsStack.push(((JSONObject) currentObj).get(currentField));
         }
-      } else if(currentObj instanceof JSONArray) {
-        dfsStack.push(((JSONArray) currentObj).get(0));
-      } else {
-        EndPointResponseFragment fragment = new EndPointResponseFragment();
-        fragment.setAttributePath(currentPath);
-        fragment.setValueType(currentObj.getClass().getName());
-        fragment.setHash(""+currentObj.hashCode());
-        fragment.setEndPoint(endpoint);
-        fragmentList.add(fragment);
       }
+
     }
-    System.out.println(fragmentList);
+
+
+    fragmentList.forEach((fragment)->{
+      fragment.setMarkedForDelete(false);
+      System.out.println(endPointResponseFragmentRepository.save(fragment));
+    });
+
+
+    List<String> paths = fragmentList.stream().map(fragment -> { return fragment.getAttributePath();}).collect(Collectors.toList());
   }
 
 }
