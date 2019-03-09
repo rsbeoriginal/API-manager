@@ -1,38 +1,71 @@
 package com.apimanager.backend.service.impl;
 
+import com.apimanager.backend.dto.SwaggerImportDTO;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
-import com.apimanager.backend.service.SwaggerPlugin;
+import com.apimanager.backend.entity.Project;
+import com.apimanager.backend.entity.UserEnitity;
+import com.apimanager.backend.repository.EndpointRepository;
+import com.apimanager.backend.repository.EndpointRequestRepository;
+import com.apimanager.backend.service.EndPointResponseService;
+import com.apimanager.backend.service.EndpointRequestService;
+import com.apimanager.backend.service.EndpointService;
+import com.apimanager.backend.service.SwaggerPluginService;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
 @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
-public class SwaggerPluginImpl implements SwaggerPlugin {
+public class SwaggerPluginServiceImpl implements SwaggerPluginService {
+
+  @Autowired
+  EndpointService endpointService;
+
+  @Autowired
+  EndpointRequestService endpointRequestService;
+
+  @Autowired
+  EndPointResponseService endPointResponseService;
+
+  @Autowired
+  EndpointRepository endpointRepository;
+
+  @Autowired
+  EndpointRequestRepository endpointRequestRepository;
+
 
   @Override
-  public void downloadEndPointsFromSwagger(String url) {
+  public void downloadEndPointsFromSwagger(SwaggerImportDTO swaggerImportDTO) {
+    String url = swaggerImportDTO.getUrl();
     url = "http://localhost:8000";
     String swaggerApiPath = "/v2/api-docs";
+    UserEnitity createdBy = new UserEnitity();
+    createdBy.setUserId(swaggerImportDTO.getUserId());
+
+    Project project = new Project();
+    project.setProjectId(swaggerImportDTO.getProjectId());
+
     RestTemplate restTemplate = new RestTemplate();
     String json = restTemplate.getForObject(url+swaggerApiPath,String.class);
 
-    List<Endpoint> endpointList = getEndPointListFromSwagger(json);
+    List<Endpoint> endpointList = getEndPointListFromSwagger(json,createdBy,project);
 
 //    System.out.println(endpointList);
   }
 
-  private List<Endpoint> getEndPointListFromSwagger(String json) {
+  private List<Endpoint> getEndPointListFromSwagger(String json, UserEnitity createdBy,
+      Project project) {
     JSONObject jsonObject = new JSONObject(json);
     List<Endpoint> endpointList = new ArrayList<>();
     HashMap<String,List<EndpointRequest>> map = new HashMap<>();
@@ -44,47 +77,73 @@ public class SwaggerPluginImpl implements SwaggerPlugin {
       Iterator<String> requestMethodKeys = pathObject.keys();
       while (requestMethodKeys.hasNext()){
         String requestMethodKey = requestMethodKeys.next();
+
+        //Create new End point and save
         Endpoint endpoint = new Endpoint();
+        endpoint.setCreatedBy(createdBy);
+        endpoint.setCreatedTimestamp((new Date()).getTime());
         endpoint.setEndpointPath(pathKey);
+        endpoint.setProject(project);
         endpoint.setRequestMethod(requestMethodKey);
+        endpoint.setUpdatedBy(createdBy);
+        endpoint.setUpdatedTimestamp((new Date()).getTime());
         endpointList.add(endpoint);
 
+        //save EndPoint
+        endpoint = endpointRepository.save(endpoint);
+
         JSONArray parametersArray = pathObject.getJSONObject(requestMethodKey).getJSONArray("parameters");
-        List<EndpointRequest> endpointRequestList = new ArrayList<>();
-        endpointRequestList.add(new EndpointRequest());
-        endpointRequestList.add(new EndpointRequest());
+//        List<EndpointRequest> endpointRequestList = new ArrayList<>();
+//        endpointRequestList.add(new EndpointRequest());
+//        endpointRequestList.add(new EndpointRequest());
 
 //        0 -> @RequestParam
 //        1 -> @RequestBody
         JSONObject paramType = new JSONObject();
         for (int i=0;i<parametersArray.length();i++){
           JSONObject request = parametersArray.getJSONObject(i);
+          EndpointRequest endpointRequest = new EndpointRequest();
+          endpointRequest.setEndpoint(endpoint);
           if(request.optJSONObject("schema") instanceof JSONObject){
             if(request.getString("in").contains("body")){
-              endpointRequestList.get(1).setType("RequestBody");
+              endpointRequest.setType("body");
+//              endpointRequestList.get(1).setType("RequestBody");
 //              endpointRequestList.get(1).setContent(request.getJSONObject("schema").toString());
               try {
-                endpointRequestList.get(1).setContent(getJSONObjectFromDefination(json,
+                endpointRequest.setContent(getJSONObjectFromDefination(json,
                     request.getJSONObject("schema").getString("$ref")));
+//                endpointRequestList.get(1).setContent(getJSONObjectFromDefination(json,
+//                    request.getJSONObject("schema").getString("$ref")));
               }catch (Exception e){
 
               }
             }else if(request.getString("in").contains("query")) {
 //              paramType.put(request.getString("name"),request.getJSONObject("schema"));
-              paramType.put(request.getString("name"),request.getBoolean("required"));
+//              paramType.put(request.getString("name"),request.getBoolean("required"));
+              endpointRequest.setContent(request.getString("name"));
+              endpointRequest.setRequestParamRequired(request.getBoolean("required"));
+              endpointRequest.setType("param");
+//              endpointRequest.setEndpoint(endpoint);
             }
           }else if(request.has("type")) {
             if(request.getString("in").contains("query")){
 //              paramType.put(request.getString("name"),request.getString("type"));
               paramType.put(request.getString("name"),request.getBoolean("required"));
+              endpointRequest.setContent(request.getString("name"));
+              endpointRequest.setRequestParamRequired(request.getBoolean("required"));
+              endpointRequest.setType("param");
             }else if(request.getString("in").contains("body")) {
-              endpointRequestList.get(1).setType("RequestBody");
-              endpointRequestList.get(1).setContent(request.getString("type"));
+              endpointRequest.setType("body");
+              //TODO:CHCEK THIS NOT SURE
+              endpointRequest.setContent(request.getString("type"));
+//              endpointRequestList.get(1).setType("RequestBody");
+//              endpointRequestList.get(1).setContent(request.getString("type"));
             }
           }
+          endpointRequestRepository.save(endpointRequest);
         }
-        endpointRequestList.get(0).setContent(paramType.toString());
-        map.put(endpoint.getEndpointPath(),endpointRequestList);
+//        endpointRequestList.get(0).setContent(paramType.toString());
+//        map.put(endpoint.getEndpointPath(),endpointRequestList);
 
         //RESPONSES
         JSONObject responsesObject = pathObject.getJSONObject(requestMethodKey).getJSONObject("responses");
