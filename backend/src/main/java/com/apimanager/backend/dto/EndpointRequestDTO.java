@@ -1,21 +1,12 @@
-package com.apimanager.backend.entity;
+package com.apimanager.backend.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.json.JSONObject;
+import com.apimanager.backend.entity.Endpoint;
 
-@Entity(name = EndpointRequest.ENDPOINT_REQUEST_TABLE)
-public class EndpointRequest {
+public class EndpointRequestDTO {
 
-  public static final String ENDPOINT_REQUEST_TABLE = "ENDPOINT_REQUEST";
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name="uuid",strategy = "uuid2")
   private String id;
   @ManyToOne
   @JoinColumn(name = "endpoint_id")
@@ -24,10 +15,6 @@ public class EndpointRequest {
   private boolean isRequestParamRequired;
   private String content;
   private int version;
-
-  public static String getEndpointRequestTable() {
-    return ENDPOINT_REQUEST_TABLE;
-  }
 
   public String getId() {
     return id;
@@ -53,20 +40,20 @@ public class EndpointRequest {
     this.type = type;
   }
 
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
-
   public boolean isRequestParamRequired() {
     return isRequestParamRequired;
   }
 
   public void setRequestParamRequired(boolean requestParamRequired) {
     isRequestParamRequired = requestParamRequired;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 
   public int getVersion() {
@@ -79,7 +66,7 @@ public class EndpointRequest {
 
   @Override
   public String toString() {
-    return "EndpointRequest{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
+    return "EndpointRequestDTO{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
         + ", isRequestParamRequired=" + isRequestParamRequired + ", content='" + content + '\'' + ", version=" + version
         + '}';
   }

@@ -9,7 +9,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.service.spi.InjectService;
 
 @Entity
 @Table(name = Endpoint.ENDPOINT_TABLE)
@@ -20,7 +19,7 @@ public class Endpoint {
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name="uuid",strategy = "uuid2")
-  private String endpointId;
+  private String id;
   private String endpointPath;
   private String requestMethod;
   @OneToOne
@@ -39,12 +38,12 @@ public class Endpoint {
     return ENDPOINT_TABLE;
   }
 
-  public String getEndpointId() {
-    return endpointId;
+  public String getId() {
+    return id;
   }
 
-  public void setEndpointId(String endpointId) {
-    this.endpointId = endpointId;
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getEndpointPath() {
@@ -105,7 +104,7 @@ public class Endpoint {
 
   @Override
   public String toString() {
-    return "Endpoint{" + "endpointId='" + endpointId + '\'' + ", endpointPath='" + endpointPath + '\''
+    return "Endpoint{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\''
         + ", requestMethod='" + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp="
         + createdTimestamp + ", updatedBy=" + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project="
         + project + '}';
