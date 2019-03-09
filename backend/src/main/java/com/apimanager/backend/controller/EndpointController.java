@@ -30,6 +30,8 @@ public class EndpointController {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
         Endpoint endpoint = new Endpoint();
         BeanUtils.copyProperties(requestDTO.getRequest(), endpoint);
+        System.out.println(requestDTO.getRequest());
+        System.out.println(endpoint);
         responseDTO = endpointService.addEndpoint(endpoint);
       } else {
         responseDTO = new ResponseDTO<>();
@@ -37,15 +39,15 @@ public class EndpointController {
         responseDTO.setErrorMessage(("Access Denied"));
         responseDTO.setResponse(null);
       }
-    }catch (Exception e)
-    {
-       responseDTO = new ResponseDTO<>();
-       responseDTO.setSuccess(false);
-       responseDTO.setErrorMessage("");
+    } catch (Exception e) {
+      responseDTO = new ResponseDTO<>();
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage(e.getMessage());
+      responseDTO.setResponse(null);
     }
-
     return responseDTO;
   }
+
 
 
 

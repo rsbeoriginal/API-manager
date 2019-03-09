@@ -28,6 +28,7 @@ public class EndpointServiceImplementation implements EndpointService {
     ResponseDTO<EndpointDTO> responseDTO = new ResponseDTO<>();
     responseDTO.setSuccess(true);
     responseDTO.setResponse(endpointDTO);
+    responseDTO.setErrorMessage("");
     return responseDTO;
   }
 }

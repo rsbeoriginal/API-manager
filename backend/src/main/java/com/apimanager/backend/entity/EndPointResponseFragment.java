@@ -14,8 +14,8 @@ import javax.persistence.Table;
  * Created on 08 March 2019
  */
 @Entity
-@Table(name = EndPointResponse.END_POINT_RESPONSE_TABLE)
-public class EndPointResponse {
+@Table(name = EndPointResponseFragment.END_POINT_RESPONSE_TABLE)
+public class EndPointResponseFragment {
 
   public static final String END_POINT_RESPONSE_TABLE = "endpoint_response";
 
@@ -25,7 +25,7 @@ public class EndPointResponse {
   private String responseId;
 
   @ManyToOne()
-  @JoinColumn(name = "endpoint")
+  @JoinColumn(name = "endpoint_id")
   private Endpoint endPoint;
 
   private String attributePath;
@@ -33,6 +33,8 @@ public class EndPointResponse {
   private String valueType;
 
   private String hash;
+
+  private boolean markedForDelete;
 
 
   public String getResponseId() {
@@ -75,14 +77,24 @@ public class EndPointResponse {
     this.hash = hash;
   }
 
+
+  public boolean isMarkedForDelete() {
+    return markedForDelete;
+  }
+
+  public void setMarkedForDelete(boolean markedForDelete) {
+    this.markedForDelete = markedForDelete;
+  }
+
   @Override
   public String toString() {
-    return "EndPointResponse{" +
+    return "EndPointResponseFragment{" +
             "responseId='" + responseId + '\'' +
             ", endPoint=" + endPoint +
             ", attributePath='" + attributePath + '\'' +
             ", valueType='" + valueType + '\'' +
             ", hash='" + hash + '\'' +
+            ", markedForDelete=" + markedForDelete +
             '}';
   }
 }
