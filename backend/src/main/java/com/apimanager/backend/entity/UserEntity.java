@@ -3,10 +3,10 @@ package com.apimanager.backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
@@ -26,13 +26,11 @@ public class UserEntity {
   String password;
 
   @JsonIgnore
-  @OneToMany()
-  @JoinColumn(name = "organisation_mapping_id")
+  @OneToMany(mappedBy  = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrganisationUserMapping> orgUserMappings;
 
   @JsonIgnore
-  @OneToMany()
-  @JoinColumn(name = "project_mapping_id")
+  @OneToMany(mappedBy  = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ProjectUserMapping> projectUserMappings;
 
   public String getUserId() {

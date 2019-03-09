@@ -1,8 +1,8 @@
 package com.apimanager.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,8 +25,7 @@ public class Organisation {
   @JoinColumn(name = "created_by")
   UserEntity createdBy;
 
-  @JsonIgnore
-  @OneToMany(mappedBy = "organisation")
+  @OneToMany(mappedBy  = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrganisationUserMapping> orgUserMapping;
 
   public String getOrganisationId() {

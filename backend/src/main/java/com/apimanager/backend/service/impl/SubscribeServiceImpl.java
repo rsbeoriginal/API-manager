@@ -2,17 +2,14 @@ package com.apimanager.backend.service.impl;
 
 import com.apimanager.backend.dto.UserSubscriptionDto;
 import com.apimanager.backend.entity.Endpoint;
-import com.apimanager.backend.entity.OrganisationUserMapping;
 import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.entity.UserSubscription;
 import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.repository.SubscribeRepository;
 import com.apimanager.backend.repository.UserRepository;
 import com.apimanager.backend.service.SubscribeService;
-import com.apimanager.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +60,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     UserSubscription subscription = new UserSubscription();
     subscription.setSubscriber(user);
     subscription.setEndPoint(endpoint);
+    subscription.setSubscribedVersion((int)endpoint.getCurrentVersion());
     subscription = subscribeRepository.save(subscription);
 
     if(subscription==null) return null;
@@ -71,6 +69,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     dto.setSubscriptionId(subscription.getSubscriptionId());
     dto.setEndPointId(subscription.getEndPoint().getId());
     dto.setSubscriberId(subscription.getSubscriber().getUserId());
+    dto.setSubscribedVersion(endpoint.getCurrentVersion());
 
     return dto;
 

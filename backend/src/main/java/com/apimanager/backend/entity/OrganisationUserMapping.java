@@ -25,12 +25,12 @@ public class OrganisationUserMapping {
   private String organisationMappingId;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
-  private UserEntity user;
-
-  @ManyToOne
   @JoinColumn(name = "organisation_id")
   private Organisation organisation;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UserEntity user;
 
   private String role;
 
