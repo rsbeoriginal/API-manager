@@ -15,6 +15,7 @@ public class EndpointRequestDTO {
   private boolean isRequestParamRequired;
   private String content;
   private int version;
+  private boolean isPublished=true;
 
   public String getId() {
     return id;
@@ -64,10 +65,18 @@ public class EndpointRequestDTO {
     this.version = version;
   }
 
+  public boolean isPublished() {
+    return isPublished;
+  }
+
+  public void setPublished(boolean published) {
+    isPublished = published;
+  }
+
   @Override
   public String toString() {
     return "EndpointRequestDTO{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
         + ", isRequestParamRequired=" + isRequestParamRequired + ", content='" + content + '\'' + ", version=" + version
-        + '}';
+        + ", isPublished=" + isPublished + '}';
   }
 }

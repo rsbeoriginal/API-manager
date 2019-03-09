@@ -3,6 +3,8 @@ package com.apimanager.backend.service;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.apimanager.backend.dto.EndpointRequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
@@ -25,5 +27,9 @@ public interface EndpointRequestService {
 
   //for user
   List<EndpointRequestDTO> getCurrentVersionEndpointRequest(String endpointId) throws Exception;
+
+  @Modifying
+  @Transactional
+  void deleteStaging(String endpointId) throws Exception;
 }
 

@@ -22,6 +22,7 @@ public class EndpointRequestStaging {
   private String type;
   private boolean isRequestParamRequired;
   private String content;
+  private boolean isPublished;
 
   public static String getEndpointRequestTable() {
     return ENDPOINT_REQUEST_TABLE;
@@ -67,9 +68,18 @@ public class EndpointRequestStaging {
     isRequestParamRequired = requestParamRequired;
   }
 
+  public boolean isPublished() {
+    return isPublished;
+  }
+
+  public void setPublished(boolean published) {
+    isPublished = published;
+  }
+
   @Override
   public String toString() {
-    return "EndpointRequest{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
-        + ", isRequestParamRequired=" + isRequestParamRequired + ", content=" + content + '}';
+    return "EndpointRequestStaging{" + "id='" + id + '\'' + ", endpoint=" + endpoint + ", type='" + type + '\''
+        + ", isRequestParamRequired=" + isRequestParamRequired + ", content='" + content + '\'' + ", isPublished="
+        + isPublished + '}';
   }
 }

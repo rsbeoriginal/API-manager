@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.entity.EndpointRequestStaging;
@@ -24,4 +25,8 @@ public interface EndpointRequestStagingRepository extends CrudRepository<Endpoin
   @Query(value = "delete from endpoint_request_staging where endpoint_id=?1 and type='param'",nativeQuery = true)
   @Modifying
   void deleteTypeParam(String id);
+
+  @Query(value = "delete from endpoint_request_staging where endpoint_id=?1",nativeQuery = true)
+  @Transactional
+  int deleteStaging(String endpointId);
 }
