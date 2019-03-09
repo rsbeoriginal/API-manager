@@ -1,6 +1,7 @@
 package com.apimanager.backend.service.impl;
 
 import com.apimanager.backend.entity.Notify;
+import com.apimanager.backend.entity.ProjectUserMapping;
 import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.repository.NotifyRepository;
 import com.apimanager.backend.repository.UserRepository;
@@ -49,7 +50,11 @@ public class NotifyServiceImpl implements NotifyService {
   public List<Notify> getUserNotifications(String userId) {
     UserEntity userEntity = userRepository.findOne(userId);
     List<String> projectIdList = new ArrayList<>();
-    return notifyRepository.getUserNotifications(projectIdList);
+    for(ProjectUserMapping projectUserMapping:userEntity.getProjectUserMappings()){
+      projectIdList.add(projectUserMapping.getProject().getProjectId());
+    }
+    List<Notify> notifyList = notifyRepository.getUserNotifications(projectIdList);
+    return notifyList;
   }
 
   @Override
