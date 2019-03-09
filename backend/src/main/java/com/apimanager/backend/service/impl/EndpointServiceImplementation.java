@@ -24,6 +24,7 @@ public class EndpointServiceImplementation implements EndpointService {
   private EndpointRepository endpointRepository;
 
   @Override
+  @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public ResponseDTO<EndpointDTO> addEndpoint(Endpoint endpoint) throws Exception {
     Endpoint responseEndpoint = endpointRepository.save(endpoint);
     EndpointDTO endpointDTO = new EndpointDTO();

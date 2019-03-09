@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apimanager.backend.dto.EndpointRequestDTO;
+import com.apimanager.backend.dto.EndpointRequestUserDTO;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
+import com.apimanager.backend.repository.SubscribeRepository;
 import com.apimanager.backend.service.EndpointRequestService;
 import com.apimanager.backend.util.RequestUtil;
 
@@ -30,6 +32,9 @@ public class EndpointRequestController {
 
   @Autowired
   private EndpointRequestService endpointRequestService;
+
+  @Autowired
+  private SubscribeRepository subscribeRepository;
 
   public static final String BASE_PATH = "/endpointRequest";
 
@@ -60,7 +65,8 @@ public class EndpointRequestController {
         }else
         {
           EndpointRequest endpointRequest = new EndpointRequest();
-          String jsonString = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
+          JSONObject jsonObject = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
+          String jsonString = jsonObject.toString();
           endpointRequest.setType("body");
           Endpoint endpoint = new Endpoint();
           endpoint.setId(endpointId);
@@ -115,15 +121,16 @@ public class EndpointRequestController {
           }
         } else {
           EndpointRequest endpointRequest = new EndpointRequest();
-          String jsonString = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
-          endpointRequest.setType("body");
-          Endpoint endpoint = new Endpoint();
-          endpoint.setId(endpointId);
-          endpointRequest.setEndpoint(endpoint);
-          endpointRequest.setRequestParamRequired(false);
-          endpointRequest.setContent(jsonString);
-          endpointRequest.setVersion(1);
-          list.add(endpointRequestService.addEndpointRequest(endpointRequest));
+          JSONObject jsonObject = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
+          String jsonString = jsonObject.toString();
+            endpointRequest.setType("body");
+            Endpoint endpoint = new Endpoint();
+            endpoint.setId(endpointId);
+            endpointRequest.setEndpoint(endpoint);
+            endpointRequest.setRequestParamRequired(false);
+            endpointRequest.setContent(jsonString);
+            endpointRequest.setVersion(1);
+            list.add(endpointRequestService.addEndpointRequest(endpointRequest));
         }
         responseDTO.setSuccess(true);
         responseDTO.setErrorMessage((""));
@@ -170,6 +177,32 @@ public class EndpointRequestController {
   }
 
 
+  @PostMapping("/getByUserId/{endpointId}/{userId}")
+  public ResponseDTO<EndpointRequestUserDTO> getEndpointRequestByUserId(@RequestBody RequestDTO<Void> requestDTO,@PathVariable("endpointId") String endpointId, @PathVariable("userId") String userId) {
+    ResponseDTO<EndpointRequestUserDTO>  responseDTO = new ResponseDTO<>();
+    List<EndpointRequestDTO> list = new ArrayList<>();
+    try {
+      if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
+        EndpointRequestUserDTO endpointRequestUserDTO = new EndpointRequestUserDTO();
+        endpointRequestUserDTO.setSubscribedVersion(endpointRequestService.getEndpointRequestByUserId(endpointId,userId));
+        endpointRequestUserDTO.setCurrentVersion(endpointRequestService.getCurrentVersionEndpointRequest(endpointId));
+        responseDTO.setResponse(endpointRequestUserDTO);
+        responseDTO.setSuccess(true);
+        responseDTO.setErrorMessage("");
+      } else {
+        responseDTO.setSuccess(false);
+        responseDTO.setErrorMessage(("Access Denied"));
+        responseDTO.setResponse(null);
+      }
+    } catch (Exception e) {
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage(e.getMessage());
+      responseDTO.setResponse(null);
+    }
+    return responseDTO;
+  }
+
+
   //publish changes
   @PostMapping("/publish/{endpointId}")
   public ResponseDTO<List<EndpointRequestDTO>> publishEndpointRequestChanges(@RequestBody RequestDTO<Void> requestDTO, @PathVariable("endpointId") String endpointId) {
@@ -196,7 +229,7 @@ public class EndpointRequestController {
 
 
   //data types  -- number, string, array and object
-  public String convertHashMapToJsonObjectForBodyType(HashMap<String,Object> hashMap) {
+  public JSONObject convertHashMapToJsonObjectForBodyType(HashMap<String,Object> hashMap) {
     System.out.println("started");
     JSONObject jsonObject = new JSONObject(hashMap);
     Iterator<String> keys = jsonObject.keys();
@@ -228,7 +261,7 @@ public class EndpointRequestController {
 
     }
 
-    return jsonObject.toString();
+    return jsonObject;
    // System.out.println(jsonObject.toString());
 
   }

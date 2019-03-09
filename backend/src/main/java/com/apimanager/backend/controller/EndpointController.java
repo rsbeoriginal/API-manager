@@ -35,6 +35,7 @@ public class EndpointController {
         BeanUtils.copyProperties(requestDTO.getRequest(), endpoint);
         System.out.println(requestDTO.getRequest());
         System.out.println(endpoint);
+        endpoint.setCurrentVersion(1);
         responseDTO = endpointService.addEndpoint(endpoint);
       } else {
         responseDTO = new ResponseDTO<>();
