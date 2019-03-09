@@ -204,7 +204,6 @@ public class EndpointRequestController {
     return responseDTO;
   }
 
-
   //publish changes
   @PostMapping("/publish/{endpointId}")
   public ResponseDTO<List<EndpointRequestDTO>> publishEndpointRequestChanges(@RequestBody RequestDTO<Void> requestDTO, @PathVariable("endpointId") String endpointId) {

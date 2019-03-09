@@ -17,11 +17,14 @@ import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.entity.EndpointRequestStaging;
+import com.apimanager.backend.entity.Notify;
 import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.repository.EndpointRequestRepository;
 import com.apimanager.backend.repository.EndpointRequestStagingRepository;
 import com.apimanager.backend.repository.SubscribeRepository;
 import com.apimanager.backend.service.EndpointRequestService;
+import com.apimanager.backend.service.NotifyService;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,9 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
 
   @Autowired
   EndpointRequestStagingRepository endpointRequestStagingRepository;
+
+  @Autowired
+  private NotifyService notifyService;
 
   @Override
   @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
@@ -129,7 +135,11 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
       endpoint.setCurrentVersion(maxVersion);
       endpointRespository.save(endpoint);
     }
-
+    Notify notify = new Notify();
+    notify.setEndpointId(endpointId);
+    notify.setNotificationType(Notify.TYPE_CHANGE);
+    notify.setProjectId(endpointRespository.findOne(endpointId).getProject().getProjectId());
+    notifyService.sendNotification(notify);
     return endpointRequestDTOS;
 
   }
