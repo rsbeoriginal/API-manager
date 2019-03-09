@@ -13,6 +13,7 @@ public class EndpointDTO {
   private UserEntity updatedBy;
   private long updatedTimestamp;
   private Project project;
+  private int currentVersion;
 
 
   public String getId() {
@@ -77,5 +78,21 @@ public class EndpointDTO {
 
   public void setProject(Project project) {
     this.project = project;
+  }
+
+  public int getCurrentVersion() {
+    return currentVersion;
+  }
+
+  public void setCurrentVersion(int currentVersion) {
+    this.currentVersion = currentVersion;
+  }
+
+  @Override
+  public String toString() {
+    return "EndpointDTO{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
+        + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
+        + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
+        + currentVersion + '}';
   }
 }

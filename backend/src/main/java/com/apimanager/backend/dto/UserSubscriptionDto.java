@@ -8,6 +8,7 @@ public class UserSubscriptionDto {
   private String subscriberId;
   private String endPointId;
   private String subscriptionId;
+  private int subscribedVersion;
 
   public String getSubscriberId() {
     return subscriberId;
@@ -33,12 +34,18 @@ public class UserSubscriptionDto {
     this.subscriptionId = subscriptionId;
   }
 
+  public int getSubscribedVersion() {
+    return subscribedVersion;
+  }
+
+  public void setSubscribedVersion(int subscribedVersion) {
+    this.subscribedVersion = subscribedVersion;
+  }
+
   @Override
   public String toString() {
-    return "UserSubscriptionDto{" +
-            "subscriberId='" + subscriberId + '\'' +
-            ", endPointId='" + endPointId + '\'' +
-            ", subscriptionId='" + subscriptionId + '\'' +
-            '}';
+    return "UserSubscriptionDto{" + "subscriberId='" + subscriberId + '\'' + ", endPointId='" + endPointId + '\''
+        + ", subscriptionId='" + subscriptionId + '\'' + ", subscribedVersion=" + subscribedVersion + '}';
   }
+
 }

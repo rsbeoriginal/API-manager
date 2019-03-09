@@ -29,6 +29,7 @@ public class UserSubscription {
   @ManyToOne()
   @JoinColumn(name = "subscriber")
   private UserEntity subscriber;
+  private int subscribedVersion;
 
   public String getSubscriptionId() {
     return subscriptionId;
@@ -54,12 +55,17 @@ public class UserSubscription {
     this.subscriber = subscriber;
   }
 
+  public int getSubscribedVersion() {
+    return subscribedVersion;
+  }
+
+  public void setSubscribedVersion(int subscribedVersion) {
+    this.subscribedVersion = subscribedVersion;
+  }
+
   @Override
   public String toString() {
-    return "UserSubscription{" +
-            "subscriptionId='" + subscriptionId + '\'' +
-            ", endPoint=" + endPoint +
-            ", subscriber=" + subscriber +
-            '}';
+    return "UserSubscription{" + "subscriptionId='" + subscriptionId + '\'' + ", endPoint=" + endPoint + ", subscriber="
+        + subscriber + ", subscribedVersion=" + subscribedVersion + '}';
   }
 }

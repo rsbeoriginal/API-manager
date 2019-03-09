@@ -33,6 +33,7 @@ public class Endpoint {
   @ManyToOne
   @JoinColumn(name = "project_id")
   private Project project;
+  private int currentVersion;
 
   public static String getEndpointTable() {
     return ENDPOINT_TABLE;
@@ -102,11 +103,19 @@ public class Endpoint {
     this.project = project;
   }
 
+  public int getCurrentVersion() {
+    return currentVersion;
+  }
+
+  public void setCurrentVersion(int currentVersion) {
+    this.currentVersion = currentVersion;
+  }
+
   @Override
   public String toString() {
-    return "Endpoint{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\''
-        + ", requestMethod='" + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp="
-        + createdTimestamp + ", updatedBy=" + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project="
-        + project + '}';
+    return "Endpoint{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
+        + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
+        + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
+        + currentVersion + '}';
   }
 }

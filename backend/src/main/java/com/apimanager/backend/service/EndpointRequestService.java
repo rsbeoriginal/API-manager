@@ -13,6 +13,6 @@ public interface EndpointRequestService {
 
   List<EndpointRequestDTO> getEndpointRequest(String endpointId) throws Exception;
 
-  ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(String endpointId) throws Exception;
+  List<EndpointRequestDTO> publishEndpointRequestChanges(String endpointId) throws Exception;
 }
 

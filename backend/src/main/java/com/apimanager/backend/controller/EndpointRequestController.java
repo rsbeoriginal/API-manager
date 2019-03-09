@@ -172,12 +172,13 @@ public class EndpointRequestController {
 
   //publish changes
   @PostMapping("/publish/{endpointId}")
-  public ResponseDTO<EndpointRequestDTO> publishEndpointRequestChanges(@RequestBody RequestDTO<Void> requestDTO, @PathVariable("endpointId") String endpointId) {
-    ResponseDTO<EndpointRequestDTO> responseDTO;
+  public ResponseDTO<List<EndpointRequestDTO>> publishEndpointRequestChanges(@RequestBody RequestDTO<Void> requestDTO, @PathVariable("endpointId") String endpointId) {
+    ResponseDTO<List<EndpointRequestDTO>> responseDTO = new ResponseDTO<>();
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
-        EndpointRequest endpointRequest = new EndpointRequest();
-        responseDTO = endpointRequestService.publishEndpointRequestChanges(endpointId);
+        responseDTO.setResponse(endpointRequestService.publishEndpointRequestChanges(endpointId));
+        responseDTO.setSuccess(true);
+        responseDTO.setErrorMessage("");
       } else {
         responseDTO = new ResponseDTO<>();
         responseDTO.setSuccess(false);
