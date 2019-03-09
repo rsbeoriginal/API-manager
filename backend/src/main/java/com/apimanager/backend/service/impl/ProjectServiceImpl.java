@@ -67,24 +67,32 @@ public class ProjectServiceImpl implements ProjectService {
           response.setErrorMessage("NEW USER IS NOT THE PART OF THE PROJECT OWNER ORGANISATION");
         } else {
 
-          ProjectUserMapping mapping = new ProjectUserMapping();
-          mapping.setProject(project);
-          mapping.setUser(user);
-          mapping.setRole("NORMAL");
 
-          mapping = projectUserRepository.save(mapping);
+          ProjectUserMapping mapping = projectUserRepository.findByUser(user);
 
-          if (mapping == null) {
-            response.setErrorMessage("DATABASE ERROR");
+          if (null != mapping) {
+            response.setErrorMessage("USER ALREADY ENROLLED");
             response.setSuccess(false);
           } else {
-            ProjectUserMappingDto dto = new ProjectUserMappingDto();
-            dto.setProjectMappingId(mapping.getProjectMappingId());
-            dto.setProjectId(mapping.getProject().getProjectId());
-            dto.setRole(mapping.getRole());
-            dto.setUserId(mapping.getUser().getUserId());
-            response.setSuccess(true);
-            response.setResponse(dto);
+            mapping = new ProjectUserMapping();
+            mapping.setProject(project);
+            mapping.setUser(user);
+            mapping.setRole("NORMAL");
+
+            mapping = projectUserRepository.save(mapping);
+
+            if (mapping == null) {
+              response.setErrorMessage("DATABASE ERROR");
+              response.setSuccess(false);
+            } else {
+              ProjectUserMappingDto dto = new ProjectUserMappingDto();
+              dto.setProjectMappingId(mapping.getProjectMappingId());
+              dto.setProjectId(mapping.getProject().getProjectId());
+              dto.setRole(mapping.getRole());
+              dto.setUserId(mapping.getUser().getUserId());
+              response.setSuccess(true);
+              response.setResponse(dto);
+            }
           }
         }
       }

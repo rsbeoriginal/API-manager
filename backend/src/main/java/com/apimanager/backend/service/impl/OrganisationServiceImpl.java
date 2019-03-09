@@ -10,7 +10,6 @@ import com.apimanager.backend.repository.OrganisationRepository;
 import com.apimanager.backend.repository.OrganisationUserRepository;
 import com.apimanager.backend.repository.UserRepository;
 import com.apimanager.backend.service.OrganisationService;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,24 +63,32 @@ public class OrganisationServiceImpl implements OrganisationService {
         response.setErrorMessage("INVALID NEW USER");
       } else {
 
-        OrganisationUserMapping mapping = new OrganisationUserMapping();
-        mapping.setOrganisation(organisation);
-        mapping.setUser(user);
-        mapping.setRole("NORMAL");
+        OrganisationUserMapping mapping = organisationUserRepository.findByUser(user);
 
-        mapping = organisationUserRepository.save(mapping);
-
-        if (mapping == null) {
-          response.setErrorMessage("DATABASE ERROR");
+        if(null!=mapping) {
+          response.setErrorMessage("USER ALREADY ENROLLED");
           response.setSuccess(false);
         } else {
-          OrganisationUserMappingDto dto =new OrganisationUserMappingDto();
-          dto.setOrganisationMappingId(mapping.getOrganisationMappingId());
-          dto.setOrganisationId(mapping.getOrganisation().getOrganisationId());
-          dto.setRole(mapping.getRole());
-          dto.setUserId(mapping.getUser().getUserId());
-          response.setSuccess(true);
-          response.setResponse(dto);
+
+          mapping = new OrganisationUserMapping();
+          mapping.setOrganisation(organisation);
+          mapping.setUser(user);
+          mapping.setRole("NORMAL");
+
+          mapping = organisationUserRepository.save(mapping);
+
+          if (mapping == null) {
+            response.setErrorMessage("DATABASE ERROR");
+            response.setSuccess(false);
+          } else {
+            OrganisationUserMappingDto dto = new OrganisationUserMappingDto();
+            dto.setOrganisationMappingId(mapping.getOrganisationMappingId());
+            dto.setOrganisationId(mapping.getOrganisation().getOrganisationId());
+            dto.setRole(mapping.getRole());
+            dto.setUserId(mapping.getUser().getUserId());
+            response.setSuccess(true);
+            response.setResponse(dto);
+          }
         }
       }
     }
