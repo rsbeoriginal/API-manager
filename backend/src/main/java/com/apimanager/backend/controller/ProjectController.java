@@ -6,6 +6,7 @@ import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Organisation;
 import com.apimanager.backend.entity.Project;
+import com.apimanager.backend.entity.ProjectUserMapping;
 import com.apimanager.backend.service.ProjectService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -27,7 +29,13 @@ public class ProjectController {
   public ResponseDTO<ProjectDTO> addProject(@RequestBody RequestDTO<Project> requestDTO){
     ResponseDTO<ProjectDTO> responseDTO = new ResponseDTO<>();
     try {
-      Project project = projectService.addProject(requestDTO.getRequest());
+      Project project = requestDTO.getRequest();
+      ProjectUserMapping projectUserMapping = new ProjectUserMapping();
+      projectUserMapping.setProject(project);
+      projectUserMapping.setRole("CREATOR");
+      projectUserMapping.setUser(project.getCreatedBy());
+      project.setProjectUserMappingList(Arrays.asList(projectUserMapping));
+      project = projectService.addProject(requestDTO.getRequest());
       ProjectDTO projectDTO = new ProjectDTO();
       BeanUtils.copyProperties(project,projectDTO);
       responseDTO.setResponse(projectDTO);
