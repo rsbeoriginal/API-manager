@@ -21,7 +21,7 @@ public class OrganisationUserMappingDto {
 
   private String organisationMappingId;
 
-  private String userId;
+  private String userEmail;
 
   private String organisationId;
 
@@ -36,12 +36,12 @@ public class OrganisationUserMappingDto {
     this.organisationMappingId = organisationMappingId;
   }
 
-  public String getUserId() {
-    return userId;
+  public String getUserEmail() {
+    return userEmail;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setUserEmail(String userId) {
+    this.userEmail = userId;
   }
 
   public String getOrganisationId() {

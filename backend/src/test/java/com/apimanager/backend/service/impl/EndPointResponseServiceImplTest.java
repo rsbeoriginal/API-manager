@@ -1,16 +1,19 @@
 package com.apimanager.backend.service.impl;
 
+import com.apimanager.backend.entity.EndPointResponseFragment;
 import com.apimanager.backend.entity.Endpoint;
+import com.apimanager.backend.repository.EndPointResponseFragmentRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
+import java.util.Optional;
 
 /**
  * @author jayjoshi
@@ -20,6 +23,9 @@ public class EndPointResponseServiceImplTest {
 
   @InjectMocks
   private EndPointResponseServiceImpl endPointResponseService;
+
+  @Mock
+  private EndPointResponseFragmentRepository endPointResponseFragmentRepository;
 
   @Before
   public void setUp() throws Exception {
@@ -36,6 +42,10 @@ public class EndPointResponseServiceImplTest {
 
   @Test
   public void insertEndpointResponse() throws JSONException {
+
+    Mockito.doNothing().when(endPointResponseFragmentRepository).markForDelete(Mockito.anyString());
+    Mockito.when(endPointResponseFragmentRepository.findOneByEndPointAndAttributePath(Mockito.any(Endpoint.class),Mockito.anyString())).thenReturn(Optional.empty());
+    Mockito.when(endPointResponseFragmentRepository.save(Mockito.any(EndPointResponseFragment.class))).thenReturn(null);
 
     JSONObject jsonObject = new JSONObject("{\n" +
             "  \"glossary\": {\n" +

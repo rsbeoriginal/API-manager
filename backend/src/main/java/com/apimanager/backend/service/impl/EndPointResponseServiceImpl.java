@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
   public JSONObject fetchEndpointResponse(String endpointId) {
     Endpoint endpoint = new Endpoint();
     endpoint.setId(endpointId);
-    List<EndPointResponseFragment> fragmentList = endPointResponseFragmentRepository.findByEndPoint(endpoint);
+    List<EndPointResponseFragment> fragmentList = endPointResponseFragmentRepository.findByEndPointAndMarkedForDeleteFalse(endpoint);
     JSONObject obj = new JSONObject();
     JSONObject cursorObject = obj;
     for(EndPointResponseFragment fragment : fragmentList) {
@@ -84,10 +85,12 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
   @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public void insertEndpointResponse(String endpointId,JSONObject jsonObject) {
 
-    Endpoint endpoint = new Endpoint();
-    endpoint.setId(endpointId);
+    jsonObject = cleanJSON(jsonObject);
 
-    endPointResponseFragmentRepository.markForDelete(endpoint.getId());
+    Endpoint endpoint = new Endpoint();
+    //endpoint.setId(endpointId);
+
+    endPointResponseFragmentRepository.markForDelete(endpointId);
 
     List<EndPointResponseFragment> fragmentList = new LinkedList<>();
     Stack<Object> dfsStack = new Stack<>();
@@ -131,11 +134,41 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
 
     fragmentList.forEach((fragment)->{
       fragment.setMarkedForDelete(false);
-      System.out.println(endPointResponseFragmentRepository.save(fragment));
+      endPointResponseFragmentRepository.save(fragment);
     });
 
 
     List<String> paths = fragmentList.stream().map(fragment -> { return fragment.getAttributePath();}).collect(Collectors.toList());
+  }
+
+  public JSONObject cleanJSON(JSONObject jsonObject) {
+
+    Queue<Object> queue = new LinkedList<Object>();
+
+    queue.add(jsonObject);
+
+    while ( ! queue.isEmpty() ) {
+      Object currentObject = queue.remove();
+      if(currentObject instanceof JSONObject) {
+        Iterator<String> keyIter = ((JSONObject) currentObject).keys();
+        while(keyIter.hasNext()){
+          String key = keyIter.next();
+          Object value = ((JSONObject) currentObject).get(key);
+          if( (!(value instanceof JSONObject)) && (!(value instanceof JSONArray)) ) {
+            ((JSONObject) currentObject).put(key,value.getClass().getSimpleName());
+          } else {
+            queue.add(value);
+          }
+        }
+      } else if(currentObject instanceof JSONArray) {
+        for(int index=0; index < ((JSONArray) currentObject).length(); index++) {
+          queue.add(((JSONArray) currentObject).get(index));
+        }
+      }
+    }
+
+    return jsonObject;
+
   }
 
 

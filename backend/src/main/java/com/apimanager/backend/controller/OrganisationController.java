@@ -65,7 +65,7 @@ public class OrganisationController {
   @PostMapping("/addUserToOrganisation")
   public ResponseDTO<OrganisationUserMappingDto> addUserOrganisation(@RequestBody RequestDTO<OrganisationUserMappingDto> request) {
     return organisationService.addNewUserToOrg(
-            request.getRequest().getUserId(),
+            request.getRequest().getUserEmail(),
             request.getRequest().getOrganisationId(),
             request.getTokenId());
   }

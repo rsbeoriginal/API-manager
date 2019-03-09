@@ -14,7 +14,7 @@ import java.util.Optional;
  * Created on 08 March 2019
  */
 public interface EndPointResponseFragmentRepository extends CrudRepository<EndPointResponseFragment,String> {
-  List<EndPointResponseFragment> findByEndPoint(Endpoint endpoint);
+  List<EndPointResponseFragment> findByEndPointAndMarkedForDeleteFalse(Endpoint endpoint);
   Optional<EndPointResponseFragment> findOneByEndPointAndAttributePath(Endpoint endPoint,String attributePath);
   @Modifying
   @Query("UPDATE EndPointResponseFragment SET markedForDelete = TRUE WHERE endpoint_id = ?1")
