@@ -4,12 +4,14 @@ import com.apimanager.backend.dto.OrganisationDTO;
 import com.apimanager.backend.dto.OrganisationUserMappingDto;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
+import com.apimanager.backend.dto.UserDTO;
 import com.apimanager.backend.entity.Organisation;
 import com.apimanager.backend.entity.OrganisationUserMapping;
 import com.apimanager.backend.entity.UserEntity;
 import com.apimanager.backend.service.OrganisationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,5 +69,17 @@ public class OrganisationController {
             request.getRequest().getOrganisationId(),
             request.getTokenId());
   }
+
+  @PostMapping("/getAllUserByOrganization/{organizationId}")
+  public ResponseDTO<List<UserDTO>> getAllUserByOrganization(@RequestBody RequestDTO<Void> request,@PathVariable("organizationId") String organizationId) {
+    //get list of organizationmappings with respect to oId
+    ResponseDTO<List<UserDTO>> responseDTO = new ResponseDTO<>();
+    responseDTO.setResponse(organisationService.getAllUserByOrganization(organizationId));
+    responseDTO.setSuccess(true);
+    responseDTO.setErrorMessage("");
+    return responseDTO;
+  }
+
+
 
 }

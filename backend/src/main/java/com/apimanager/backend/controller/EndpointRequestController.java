@@ -110,7 +110,7 @@ public class EndpointRequestController {
             EndpointRequest endpointRequest = new EndpointRequest();
             String key = keys.next();
             String paramRequired = (String) jsonObject.get(key);
-            endpointRequest.setVersion(1);
+            //endpointRequest.setVersion(1);
             endpointRequest.setContent(key);
             endpointRequest.setRequestParamRequired(Boolean.valueOf(paramRequired));
             Endpoint endpoint = new Endpoint();
@@ -129,8 +129,8 @@ public class EndpointRequestController {
             endpointRequest.setEndpoint(endpoint);
             endpointRequest.setRequestParamRequired(false);
             endpointRequest.setContent(jsonString);
-            endpointRequest.setVersion(1);
-            list.add(endpointRequestService.addEndpointRequest(endpointRequest));
+            //endpointRequest.setVersion(1);
+            list.add(endpointRequestService.addEndpointRequestToStagingArea(endpointRequest));
         }
         responseDTO.setSuccess(true);
         responseDTO.setErrorMessage((""));
