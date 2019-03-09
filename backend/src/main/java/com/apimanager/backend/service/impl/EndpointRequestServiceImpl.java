@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,19 @@ import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.entity.EndpointRequestStaging;
+import com.apimanager.backend.entity.Notify;
 import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.repository.EndpointRequestRepository;
 import com.apimanager.backend.repository.EndpointRequestStagingRepository;
 import com.apimanager.backend.repository.SubscribeRepository;
 import com.apimanager.backend.service.EndpointRequestService;
+import com.apimanager.backend.service.NotifyService;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = false)
+@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 public class EndpointRequestServiceImpl implements EndpointRequestService {
 
   @Autowired
@@ -39,6 +43,9 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
 
   @Autowired
   EndpointRequestStagingRepository endpointRequestStagingRepository;
+
+  @Autowired
+  private NotifyService notifyService;
 
   @Override
   @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
@@ -58,6 +65,7 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
     //      } else {
     //        endpointRequestStagingRepository.deleteTypeParam(endpointRequestStaging.getEndpoint().getId());
     //      }
+    endpointRequestStaging.setPublished(false);
     EndpointRequestStaging endpointRequestStagingResponse =
         endpointRequestStagingRepository.save(endpointRequestStaging);
     EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
@@ -115,6 +123,8 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
         endpointRequest.setVersion(maxVersion);
       }
       EndpointRequest endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
+      endpointRequestStaging.setPublished(true);
+      endpointRequestStagingRepository.save(endpointRequestStaging);
       EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
       BeanUtils.copyProperties(endpointRequestResponse, endpointRequestDTO);
       endpointRequestDTOS.add(endpointRequestDTO);
@@ -125,7 +135,11 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
       endpoint.setCurrentVersion(maxVersion);
       endpointRespository.save(endpoint);
     }
-
+    Notify notify = new Notify();
+    notify.setEndpointId(endpointId);
+    notify.setNotificationType(Notify.TYPE_CHANGE);
+    notify.setProjectId(endpointRespository.findOne(endpointId).getProject().getProjectId());
+    notifyService.sendNotification(notify);
     return endpointRequestDTOS;
 
   }
@@ -169,6 +183,14 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
         endpointRequestDTOS.add(endpointRequestDTO);
       }
     return endpointRequestDTOS;
+  }
+
+
+  @Override
+  @Modifying
+  @Transactional
+  public void deleteStaging(String endpointId) throws Exception {
+      endpointRequestStagingRepository.deleteStaging(endpointId);
   }
 
 }

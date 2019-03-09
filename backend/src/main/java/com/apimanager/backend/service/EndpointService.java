@@ -11,7 +11,7 @@ public interface EndpointService {
 
   ResponseDTO<EndpointDTO> addEndpoint(Endpoint endpoint) throws Exception;
 
-  ResponseDTO<List<EndpointDTO>> getEndpointByProjectId(String projectId);
+  ResponseDTO<List<EndpointDTO>> getEndpointByProjectId(String tokenId, String projectId);
 
   Endpoint getEndpoint(String endpointId);
 }

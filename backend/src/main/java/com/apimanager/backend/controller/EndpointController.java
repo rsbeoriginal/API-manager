@@ -58,7 +58,7 @@ public class EndpointController {
     ResponseDTO<List<EndpointDTO>> responseDTO;
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
-        responseDTO = endpointService.getEndpointByProjectId(projectId);
+        responseDTO = endpointService.getEndpointByProjectId(requestDTO.getTokenId(),projectId);
 
       } else {
         responseDTO = new ResponseDTO<>();

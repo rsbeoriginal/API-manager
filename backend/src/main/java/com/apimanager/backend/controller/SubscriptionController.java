@@ -6,6 +6,7 @@ import com.apimanager.backend.dto.UserSubscriptionDto;
 import com.apimanager.backend.service.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ public class SubscriptionController {
   private SubscribeService subscribeService;
 
   @PostMapping("/new")
-  public ResponseDTO<UserSubscriptionDto> newSubscription(RequestDTO<UserSubscriptionDto> request) {
+  public ResponseDTO<UserSubscriptionDto> newSubscription(@RequestBody RequestDTO<UserSubscriptionDto> request) {
     return subscribeService.subscribeToEndpoint(request.getRequest().getSubscriberId()
             ,request.getRequest().getEndPointId());
   }

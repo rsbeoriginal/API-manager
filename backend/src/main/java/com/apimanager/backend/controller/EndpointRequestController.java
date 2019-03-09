@@ -101,7 +101,9 @@ public class EndpointRequestController {
   public ResponseDTO<List<EndpointRequestDTO>> updateEndpointRequest(@RequestBody RequestDTO<HashMap<String,Object>> requestDTO, @PathVariable("endpointId") String endpointId,@PathVariable("type") String type) {
     ResponseDTO<List<EndpointRequestDTO>> responseDTO = new ResponseDTO<>();
     List<EndpointRequestDTO> list = new ArrayList<>();
+
     try {
+      //endpointRequestService.deleteStaging(endpointId);
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
         if(type.equals("param")) {
           JSONObject jsonObject = new JSONObject(requestDTO.getRequest());
@@ -201,7 +203,6 @@ public class EndpointRequestController {
     }
     return responseDTO;
   }
-
 
   //publish changes
   @PostMapping("/publish/{endpointId}")

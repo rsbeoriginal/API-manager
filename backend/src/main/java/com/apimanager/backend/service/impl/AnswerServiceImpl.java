@@ -19,12 +19,12 @@ public class AnswerServiceImpl implements AnswerService {
   private AnswerRepository answerRepository;
 
   @Override
-  public Answer saveAnswer(Answer answer) {
+  public Answer saveAnswer(Answer answer) throws Exception {
     return answerRepository.save(answer);
   }
 
   @Override
-  public List<Answer> getAnswerByIssue(String issueId) {
+  public List<Answer> getAnswerByIssue(String issueId) throws Exception {
     return answerRepository.findAnswerByIssueId(issueId);
   }
 }

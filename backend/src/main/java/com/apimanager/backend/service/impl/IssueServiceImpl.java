@@ -22,12 +22,12 @@ public class IssueServiceImpl implements IssueService {
   private IssueRepository issueRepository;
 
   @Override
-  public Issue addIssue(Issue issue) {
+  public Issue addIssue(Issue issue) throws Exception {
     return issueRepository.save(issue);
     }
 
   @Override
-  public List<IssueDTO> getAllIssues(String projectId, String endpointId) {
+  public List<IssueDTO> getAllIssues(String projectId, String endpointId) throws Exception{
     List<IssueDTO> issueDTOS = new ArrayList<>();
     List<Issue> issues = issueRepository.getAllIssues(projectId, endpointId);
     for(Issue issue:issues){
