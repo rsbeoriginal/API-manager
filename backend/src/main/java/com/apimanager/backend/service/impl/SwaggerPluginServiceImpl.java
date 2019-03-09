@@ -46,9 +46,10 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
 
 
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void downloadEndPointsFromSwagger(SwaggerImportDTO swaggerImportDTO) {
     String url = swaggerImportDTO.getUrl();
-    url = "http://localhost:8000";
+//    url = "http://localhost:8000";
     String swaggerApiPath = "/v2/api-docs";
     UserEnitity createdBy = new UserEnitity();
     createdBy.setUserId(swaggerImportDTO.getUserId());
@@ -64,7 +65,8 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
 //    System.out.println(endpointList);
   }
 
-  private List<Endpoint> getEndPointListFromSwagger(String json, UserEnitity createdBy,
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public List<Endpoint> getEndPointListFromSwagger(String json, UserEnitity createdBy,
       Project project) {
     JSONObject jsonObject = new JSONObject(json);
     List<Endpoint> endpointList = new ArrayList<>();
@@ -90,15 +92,15 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
         endpointList.add(endpoint);
 
         //save EndPoint
-        endpoint = endpointRepository.save(endpoint);
+//        saveEndpoint(endpoint);
+        try {
+          endpointService.addEndpoint(endpoint);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
 
         JSONArray parametersArray = pathObject.getJSONObject(requestMethodKey).getJSONArray("parameters");
-//        List<EndpointRequest> endpointRequestList = new ArrayList<>();
-//        endpointRequestList.add(new EndpointRequest());
-//        endpointRequestList.add(new EndpointRequest());
-
-//        0 -> @RequestParam
-//        1 -> @RequestBody
         JSONObject paramType = new JSONObject();
         for (int i=0;i<parametersArray.length();i++){
           JSONObject request = parametersArray.getJSONObject(i);
@@ -107,23 +109,16 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
           if(request.optJSONObject("schema") instanceof JSONObject){
             if(request.getString("in").contains("body")){
               endpointRequest.setType("body");
-//              endpointRequestList.get(1).setType("RequestBody");
-//              endpointRequestList.get(1).setContent(request.getJSONObject("schema").toString());
               try {
                 endpointRequest.setContent(getJSONObjectFromDefination(json,
                     request.getJSONObject("schema").getString("$ref")));
-//                endpointRequestList.get(1).setContent(getJSONObjectFromDefination(json,
-//                    request.getJSONObject("schema").getString("$ref")));
               }catch (Exception e){
 
               }
             }else if(request.getString("in").contains("query")) {
-//              paramType.put(request.getString("name"),request.getJSONObject("schema"));
-//              paramType.put(request.getString("name"),request.getBoolean("required"));
               endpointRequest.setContent(request.getString("name"));
               endpointRequest.setRequestParamRequired(request.getBoolean("required"));
               endpointRequest.setType("param");
-//              endpointRequest.setEndpoint(endpoint);
             }
           }else if(request.has("type")) {
             if(request.getString("in").contains("query")){
@@ -136,14 +131,15 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
               endpointRequest.setType("body");
               //TODO:CHCEK THIS NOT SURE
               endpointRequest.setContent(request.getString("type"));
-//              endpointRequestList.get(1).setType("RequestBody");
-//              endpointRequestList.get(1).setContent(request.getString("type"));
             }
           }
-          endpointRequestRepository.save(endpointRequest);
+          try {
+            endpointRequestService.addEndpointRequest(endpointRequest);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+
         }
-//        endpointRequestList.get(0).setContent(paramType.toString());
-//        map.put(endpoint.getEndpointPath(),endpointRequestList);
 
         //RESPONSES
         JSONObject responsesObject = pathObject.getJSONObject(requestMethodKey).getJSONObject("responses");
@@ -154,6 +150,8 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
         } catch (Exception e) {
           e.printStackTrace();
         }
+        endPointResponseService.insertEndpointResponse(endpoint.getId(),new JSONObject(responseString));
+
         System.out.println("response: " + responseString);
       }
     }
@@ -168,6 +166,16 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
 
 
     return endpointList;
+  }
+
+  @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
+  public void saveEndpointRequest(EndpointRequest endpointRequest) {
+    endpointRequestRepository.save(endpointRequest);
+  }
+
+  @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
+  public void saveEndpoint(Endpoint endpoint) {
+    endpoint = endpointRepository.save(endpoint);
   }
 
   private String getJSONObjectFromDefination(String json, String string) throws Exception {

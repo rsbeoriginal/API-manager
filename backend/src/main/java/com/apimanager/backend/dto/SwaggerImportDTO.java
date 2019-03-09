@@ -1,8 +1,7 @@
 package com.apimanager.backend.dto;
 
 public class SwaggerImportDTO {
-  String url;
-  String endpointId;
+  String url;;
   String userId;
   String projectId;
 
@@ -12,14 +11,6 @@ public class SwaggerImportDTO {
 
   public void setUrl(String url) {
     this.url = url;
-  }
-
-  public String getEndpointId() {
-    return endpointId;
-  }
-
-  public void setEndpointId(String endpointId) {
-    this.endpointId = endpointId;
   }
 
   public String getUserId() {

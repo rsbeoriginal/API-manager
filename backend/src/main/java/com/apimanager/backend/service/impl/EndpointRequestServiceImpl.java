@@ -15,6 +15,8 @@ import com.apimanager.backend.entity.EndpointRequestStaging;
 import com.apimanager.backend.repository.EndpointRequestRepository;
 import com.apimanager.backend.repository.EndpointRequestStagingRepository;
 import com.apimanager.backend.service.EndpointRequestService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EndpointRequestServiceImpl implements EndpointRequestService {
@@ -26,6 +28,7 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   EndpointRequestStagingRepository endpointRequestStagingRepository;
 
   @Override
+  @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public EndpointRequestDTO addEndpointRequest(EndpointRequest endpointRequest) throws Exception {
     EndpointRequest endpointRequestResponse = endpointRequestRepository.save(endpointRequest);
     EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();

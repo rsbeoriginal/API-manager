@@ -76,6 +76,7 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
   }
 
   @Override
+  @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public void insertEndpointResponse(String endpointId,JSONObject jsonObject) {
 
     Endpoint endpoint = new Endpoint();
