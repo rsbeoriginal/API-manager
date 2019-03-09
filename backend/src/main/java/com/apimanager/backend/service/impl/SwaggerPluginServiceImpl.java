@@ -135,7 +135,9 @@ public class SwaggerPluginServiceImpl implements SwaggerPluginService {
             }
           }
           try {
-            endpointRequestService.addEndpointRequest(endpointRequest);
+            if(!endpointRequest.getContent().trim().isEmpty()) {
+              endpointRequestService.addEndpointRequest(endpointRequest);
+            }
           } catch (Exception e) {
             e.printStackTrace();
           }
