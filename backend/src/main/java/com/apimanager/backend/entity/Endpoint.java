@@ -34,6 +34,7 @@ public class Endpoint {
   @JoinColumn(name = "project_id")
   private Project project;
   private int currentVersion;
+  private String description;
 
   public static String getEndpointTable() {
     return ENDPOINT_TABLE;
@@ -111,11 +112,19 @@ public class Endpoint {
     this.currentVersion = currentVersion;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   @Override
   public String toString() {
     return "Endpoint{" + "id='" + id + '\'' + ", endpointPath='" + endpointPath + '\'' + ", requestMethod='"
         + requestMethod + '\'' + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy="
         + updatedBy + ", updatedTimestamp=" + updatedTimestamp + ", project=" + project + ", currentVersion="
-        + currentVersion + '}';
+        + currentVersion + ", description='" + description + '\'' + '}';
   }
 }
