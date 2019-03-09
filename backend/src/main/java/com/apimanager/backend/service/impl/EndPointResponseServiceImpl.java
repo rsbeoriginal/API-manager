@@ -76,6 +76,11 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
   }
 
   @Override
+  public EndPointResponseFragment findFragment(Endpoint endPoint, String fragmentPath) {
+    return endPointResponseFragmentRepository.findOneByEndPointAndAttributePath(endPoint,fragmentPath).get();
+  }
+
+  @Override
   @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public void insertEndpointResponse(String endpointId,JSONObject jsonObject) {
 
@@ -132,5 +137,7 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
 
     List<String> paths = fragmentList.stream().map(fragment -> { return fragment.getAttributePath();}).collect(Collectors.toList());
   }
+
+
 
 }

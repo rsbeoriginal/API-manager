@@ -5,6 +5,14 @@ public class ResponseDTO<T> {
   String errorMessage;
   T response;
 
+  public ResponseDTO(T response) {
+    this.response = response;
+  }
+
+  public ResponseDTO() {
+  }
+
+
   public boolean isSuccess() {
     return success;
   }

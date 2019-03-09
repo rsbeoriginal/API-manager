@@ -4,6 +4,14 @@ public class RequestDTO<T> {
   String tokenId;
   T request;
 
+  public RequestDTO(String tokenId, T request) {
+    this.tokenId = tokenId;
+    this.request = request;
+  }
+
+  public RequestDTO() {
+  }
+
   public String getTokenId() {
     return tokenId;
   }
