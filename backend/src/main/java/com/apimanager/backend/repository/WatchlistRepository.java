@@ -13,5 +13,6 @@ import java.util.List;
  */
 public interface WatchlistRepository extends CrudRepository<UserWatchlist,String> {
   List<UserWatchlist> findBySubscriber(UserEntity subscriber);
+  UserWatchlist findOneByEndPointFragmentAndSubscriber(EndPointResponseFragment fragment, UserEntity subscriber);
   void deleteByEndPointFragmentAndSubscriber(EndPointResponseFragment endPointResponseFragment,UserEntity subscriber);
 }

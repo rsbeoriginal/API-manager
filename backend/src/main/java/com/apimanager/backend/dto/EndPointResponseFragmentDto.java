@@ -16,7 +16,7 @@ public class EndPointResponseFragmentDto {
 
   private String hash;
 
-  private boolean markedForDelete;
+  private boolean isChanged;
 
 
   public String getResponseId() {
@@ -59,13 +59,12 @@ public class EndPointResponseFragmentDto {
     this.hash = hash;
   }
 
-
-  public boolean isMarkedForDelete() {
-    return markedForDelete;
+  public boolean isChanged() {
+    return isChanged;
   }
 
-  public void setMarkedForDelete(boolean markedForDelete) {
-    this.markedForDelete = markedForDelete;
+  public void setChanged(boolean changed) {
+    isChanged = changed;
   }
 
   @Override
@@ -76,7 +75,7 @@ public class EndPointResponseFragmentDto {
             ", attributePath='" + attributePath + '\'' +
             ", valueType='" + valueType + '\'' +
             ", hash='" + hash + '\'' +
-            ", markedForDelete=" + markedForDelete +
+            ", markedForDelete=" + isChanged +
             '}';
   }
 }

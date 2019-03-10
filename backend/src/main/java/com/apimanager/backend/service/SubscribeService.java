@@ -15,4 +15,6 @@ public interface SubscribeService {
   ResponseDTO<UserSubscriptionDto> subscribeToEndpoint(String userId, String endpointId);
   ResponseDTO<UserSubscriptionDto> unsubscribeToEndpoint(String userId, String endpointId);
   int countSubscribesByEndpointId(Endpoint endpoint);
+
+  ResponseDTO<UserSubscriptionDto> renewSubscription(String subscriberId, String endPointId);
 }

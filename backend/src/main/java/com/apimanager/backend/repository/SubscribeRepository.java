@@ -26,4 +26,6 @@ public interface SubscribeRepository extends CrudRepository<UserSubscription,Str
 
   long countByEndPoint(Endpoint endpoint);
 
+  void deleteByEndPointAndSubscriber(Endpoint endpoint, UserEntity subscriber);
+
 }

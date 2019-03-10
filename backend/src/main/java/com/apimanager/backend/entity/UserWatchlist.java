@@ -28,6 +28,8 @@ public class UserWatchlist {
   @JoinColumn(name = "subscriber")
   private UserEntity subscriber;
 
+  private String hash;
+
   public String getWatchlistId() {
     return watchlistId;
   }
@@ -50,6 +52,14 @@ public class UserWatchlist {
 
   public void setSubscriber(UserEntity subscriber) {
     this.subscriber = subscriber;
+  }
+
+  public String getHash() {
+    return hash;
+  }
+
+  public void setHash(String hash) {
+    this.hash = hash;
   }
 
   @Override

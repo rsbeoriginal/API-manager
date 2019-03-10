@@ -99,13 +99,71 @@ public class SubscribeServiceImpl implements SubscribeService {
   @Override
   public ResponseDTO<UserSubscriptionDto> unsubscribeToEndpoint(String userId, String endpointId) {
 
-    return null;
+    UserEntity user = userRepository.findOne(userId);
+    Endpoint endpoint = endpointRepository.findOne(endpointId);
+    ResponseDTO<UserSubscriptionDto> response = new ResponseDTO<>();
+
+    if(null==user || null==endpoint) {
+      response.setSuccess(false);
+      response.setErrorMessage("MALFORMED INPUT");
+      return response;
+    }
+
+    boolean isPartOfOrg = user.getOrgUserMappings().stream()
+            .anyMatch((mapping)->(mapping.getOrganisation().getOrganisationId()==endpoint.getProject().getOrganisation().getOrganisationId()));
+
+    if(!isPartOfOrg) {
+      response.setSuccess(false);
+      response.setErrorMessage("USER IS NOT PART OF THE ORGANISATION");
+      return response;
+    }
+
+    subscribeRepository.deleteByEndPointAndSubscriber(endpoint,user);
+
+    response.setSuccess(true);
+    return response;
 
   }
+
 
   @Override
   public int countSubscribesByEndpointId(Endpoint endpoint) {
     return (int)subscribeRepository.countByEndPoint(endpoint);
+  }
+
+  @Override
+  public ResponseDTO<UserSubscriptionDto> renewSubscription(String subscriberId, String endPointId) {
+
+    UserEntity user = userRepository.findOne(subscriberId);
+    Endpoint endpoint = endpointRepository.findOne(endPointId);
+    ResponseDTO<UserSubscriptionDto> response = new ResponseDTO<>();
+
+    if(null==user || null==endpoint) {
+      response.setSuccess(false);
+      response.setErrorMessage("MALFORMED INPUT");
+      return response;
+    }
+
+    boolean isPartOfOrg = user.getOrgUserMappings().stream()
+            .anyMatch((mapping)->(mapping.getOrganisation().getOrganisationId()==endpoint.getProject().getOrganisation().getOrganisationId()));
+
+    if(!isPartOfOrg) {
+      response.setSuccess(false);
+      response.setErrorMessage("USER IS NOT PART OF THE ORGANISATION");
+      return response;
+    }
+
+    UserSubscription subscription = subscribeRepository.findAllBySubscriberAndEndPoint(user,endpoint);
+
+    subscription.setSubscribedVersion(endpoint.getCurrentVersion());
+
+    subscription = subscribeRepository.save(subscription);
+
+    response.setSuccess(true);
+
+    return response;
+
+
   }
 
 

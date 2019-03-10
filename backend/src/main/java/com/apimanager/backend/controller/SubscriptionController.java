@@ -27,4 +27,16 @@ public class SubscriptionController {
             ,request.getRequest().getEndPointId());
   }
 
+  @PostMapping("/delete")
+  public ResponseDTO<UserSubscriptionDto> deleteSubscription(@RequestBody RequestDTO<UserSubscriptionDto> request) {
+    return subscribeService.unsubscribeToEndpoint(request.getRequest().getSubscriberId()
+            ,request.getRequest().getEndPointId());
+  }
+
+  @PostMapping("/renew")
+  public ResponseDTO<UserSubscriptionDto> renewSubscription(@RequestBody RequestDTO<UserSubscriptionDto> request) {
+    return subscribeService.renewSubscription(request.getRequest().getSubscriberId()
+            ,request.getRequest().getEndPointId());
+  }
+
 }

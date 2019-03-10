@@ -73,10 +73,23 @@ public class WatchlistServiceImpl implements WatchlistService {
       return responseDTO;
     }
 
-    UserWatchlist userWatchlist = new UserWatchlist();
+    if(fragment.isMarkedForDelete()) {
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage("REQUESTED FRAGMENT PATH HAS BEEN DELETED");
+      return responseDTO;
+    }
 
+    UserWatchlist userWatchlist = watchlistRepository.findOneByEndPointFragmentAndSubscriber(fragment,user);
+
+    if(null != userWatchlist ) {
+      responseDTO.setSuccess(false);
+      responseDTO.setErrorMessage("ALREADY IN WATCH LIST");
+      return responseDTO;
+    }
+    userWatchlist = new UserWatchlist();
     userWatchlist.setEndPointFragment(fragment);
     userWatchlist.setSubscriber(user);
+    userWatchlist.setHash(fragment.getHash());
 
     userWatchlist = watchlistRepository.save(userWatchlist);
 
@@ -155,11 +168,13 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     List<EndPointResponseFragmentDto> idList = watchlistRepository.findBySubscriber(user).stream()
+            //.filter((dbObj)->(!dbObj.getEndPointFragment().isMarkedForDelete()))
             .map((dbObj)->{
               EndPointResponseFragment entity = dbObj.getEndPointFragment();
               EndPointResponseFragmentDto dto = new EndPointResponseFragmentDto();
               BeanUtils.copyProperties(entity,dto);
               dto.setEndPointId(entity.getEndPoint().getId());
+              dto.setChanged(dbObj.getHash().equals(entity.getHash()));
               return dto;
             }).collect(Collectors.toList());
 

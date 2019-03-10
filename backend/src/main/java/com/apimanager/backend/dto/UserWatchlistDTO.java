@@ -8,6 +8,7 @@ public class UserWatchlistDTO {
   private String watchlistId;
   private String endPointFragmentId;
   private String subscriberId;
+  private boolean isChanged;
 
   public UserWatchlistDTO(String watchlistId, String endPointFragmentId, String subscriberId) {
     this.watchlistId = watchlistId;
