@@ -28,4 +28,7 @@ public interface SubscribeRepository extends CrudRepository<UserSubscription,Str
 
   void deleteByEndPointAndSubscriber(Endpoint endpoint, UserEntity subscriber);
 
+  @Query(value = "select * from user_subscription where endpoint=?1",nativeQuery = true)
+  List<UserSubscription> getAllUserSubscriptionByEndpoint(String endpointId);
+
 }

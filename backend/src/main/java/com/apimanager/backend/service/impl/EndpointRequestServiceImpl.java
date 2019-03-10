@@ -18,6 +18,7 @@ import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
 import com.apimanager.backend.entity.EndpointRequestStaging;
 import com.apimanager.backend.entity.Notify;
+import com.apimanager.backend.entity.UserSubscription;
 import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.repository.EndpointRequestRepository;
 import com.apimanager.backend.repository.EndpointRequestStagingRepository;
@@ -138,11 +139,18 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
       endpoint.setCurrentVersion(maxVersion);
     }
     endpointRespository.save(endpoint);
-    Notify notify = new Notify();
-    notify.setEndpointId(endpointId);
-    notify.setNotificationType(Notify.TYPE_CHANGE);
-    notify.setProjectId(endpointRespository.findOne(endpointId).getProject().getProjectId());
-    notifyService.sendNotification(notify);
+
+    //get all usersubscription by endpoint id;
+    List<UserSubscription> userSubscriptions = subscribeRepository.getAllUserSubscriptionByEndpoint(endpointId);
+    for(UserSubscription userSubscription:userSubscriptions){
+      Notify notify = new Notify();
+      notify.setEndpointId(endpointId);
+      notify.setNotificationType(Notify.TYPE_CHANGE);
+      notify.setExtraIdentifier(userSubscription.getSubscriber().getUserId());
+      notify.setProjectId(endpointRespository.findOne(endpointId).getProject().getProjectId());
+      notifyService.sendNotification(notify);
+    }
+
     return endpointRequestDTOS;
 
   }
