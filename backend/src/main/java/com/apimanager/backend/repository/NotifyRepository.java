@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface NotifyRepository extends CrudRepository<Notify,String> {
 
-  @Query("FROM Notify WHERE (projectId = ?1 AND notificationType = ?2 AND endpointId = ?3 AND markAsRead = FALSE)")
-  Notify checkAlreadyUnreadNotificationExists(String projectId, String notificationType, String endpointId);
+  @Query("FROM Notify WHERE (extraIdentifier = ?1 AND notificationType = ?2 AND endpointId = ?3 AND markAsRead = FALSE)")
+  Notify checkAlreadyUnreadNotificationExists(String userId, String notificationType, String endpointId);
 
   @Query("FROM Notify WHERE projectId IN (:projectIds)")
   List<Notify> getUserNotifications(@Param("projectIds") List<String> projectIdList);
@@ -19,4 +19,7 @@ public interface NotifyRepository extends CrudRepository<Notify,String> {
   @Modifying
   @Query("UPDATE Notify SET markAsRead = TRUE WHERE notifyId = ?1")
   void setNotificationAsRead(String notifyId);
+
+  @Query("FROM Notify WHERE extraIdentifier = ?1")
+  List<Notify> getUserNotificationsById(String userId);
 }

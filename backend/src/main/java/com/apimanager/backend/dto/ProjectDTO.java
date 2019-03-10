@@ -9,6 +9,7 @@ public class ProjectDTO {
   String projectDescription;
   Organisation organisation;
   UserEntity createdBy;
+  boolean author;
 
   public String getProjectId() {
     return projectId;
@@ -48,5 +49,13 @@ public class ProjectDTO {
 
   public void setProjectDescription(String projectDescription) {
     this.projectDescription = projectDescription;
+  }
+
+  public boolean isAuthor() {
+    return author;
+  }
+
+  public void setAuthor(boolean author) {
+    this.author = author;
   }
 }

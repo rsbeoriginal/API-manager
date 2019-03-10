@@ -15,6 +15,8 @@ import com.apimanager.backend.service.WatchlistService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
  * Created on 09 March 2019
  */
 @Service
+@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 public class WatchlistServiceImpl implements WatchlistService {
 
   @Autowired

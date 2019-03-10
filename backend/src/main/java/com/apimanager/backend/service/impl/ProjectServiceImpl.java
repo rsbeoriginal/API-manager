@@ -1,5 +1,6 @@
 package com.apimanager.backend.service.impl;
 
+import com.apimanager.backend.dto.ProjectDTO;
 import com.apimanager.backend.dto.ProjectUserMappingDto;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Project;
@@ -9,11 +10,13 @@ import com.apimanager.backend.repository.ProjectRepository;
 import com.apimanager.backend.repository.ProjectUserRepository;
 import com.apimanager.backend.repository.UserRepository;
 import com.apimanager.backend.service.ProjectService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,8 +40,24 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<Project> getProjectByOrganisation(String organisationId) {
-    return projectRepository.getProjectByOrganisation(organisationId);
+  public List<ProjectDTO> getProjectByOrganisation(String userId, String organisationId) {
+    List<Project> projectList = projectRepository.getProjectByOrganisation(organisationId);
+    List<ProjectDTO> projectDTOList = new ArrayList<>();
+    for (Project project : projectList) {
+      ProjectDTO projectDTO = new ProjectDTO();
+      BeanUtils.copyProperties(project,projectDTO);
+      if(checkIfUserIsAuthor(project.getProjectId(),userId)){
+        projectDTO.setAuthor(true);
+      }else {
+        projectDTO.setAuthor(false);
+      }
+      projectDTOList.add(projectDTO);
+    }
+    return projectDTOList;
+  }
+
+  private boolean checkIfUserIsAuthor(String projectId, String userId) {
+    return projectUserRepository.checkIfUserIsAuthor(userId,projectId)!=0;
   }
 
   public ResponseDTO<ProjectUserMappingDto> addNewUserToProject(String userId, String projectId, String currentUser) {

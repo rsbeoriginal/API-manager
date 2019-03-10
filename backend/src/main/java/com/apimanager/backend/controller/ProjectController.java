@@ -48,10 +48,10 @@ public class ProjectController {
   }
 
   @PostMapping("/getProjectByOrganisation")
-  public ResponseDTO<List<Project>> getProjectByOrganisation(@RequestBody RequestDTO<Organisation> requestDTO){
-    ResponseDTO<List<Project>> responseDTO = new ResponseDTO<>();
+  public ResponseDTO<List<ProjectDTO>> getProjectByOrganisation(@RequestBody RequestDTO<Organisation> requestDTO){
+    ResponseDTO<List<ProjectDTO>> responseDTO = new ResponseDTO<>();
     try {
-      responseDTO.setResponse(projectService.getProjectByOrganisation(requestDTO.getRequest().getOrganisationId()));
+      responseDTO.setResponse(projectService.getProjectByOrganisation(requestDTO.getTokenId(),requestDTO.getRequest().getOrganisationId()));
       responseDTO.setSuccess(true);
     }catch (Exception e){
       responseDTO.setSuccess(false);

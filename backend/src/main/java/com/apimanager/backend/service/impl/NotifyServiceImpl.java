@@ -28,8 +28,8 @@ public class NotifyServiceImpl implements NotifyService {
   @Override
   public Notify sendNotification(Notify notify){
     notify.setActive(notify.getNotificationStatusByType(notify.getNotificationType()));
-    if(checkAlreadyUnreadNotificationExists(notify.getProjectId(),notify.getNotificationType(),notify.getEndpointId())){
-      Notify notifyFromDb = notifyRepository.checkAlreadyUnreadNotificationExists(notify.getProjectId(),notify.getNotificationType(),notify.getEndpointId());
+    if(checkAlreadyUnreadNotificationExists(notify.getExtraIdentifier(),notify.getNotificationType(),notify.getEndpointId())){
+      Notify notifyFromDb = notifyRepository.checkAlreadyUnreadNotificationExists(notify.getExtraIdentifier(),notify.getNotificationType(),notify.getEndpointId());
       notifyFromDb.setNotifyTime(new Date());
       return notifyRepository.save(notifyFromDb);
     }else{
@@ -39,21 +39,21 @@ public class NotifyServiceImpl implements NotifyService {
     }
   }
 
-  private boolean checkAlreadyUnreadNotificationExists(String projectId, String notificationType,
+  private boolean checkAlreadyUnreadNotificationExists(String userId, String notificationType,
       String endpointId) {
-    if(notifyRepository.checkAlreadyUnreadNotificationExists(projectId,notificationType,endpointId) == null )
+    if(notifyRepository.checkAlreadyUnreadNotificationExists(userId,notificationType,endpointId) == null )
       return false;
     return true;
   }
 
   @Override
   public List<Notify> getUserNotifications(String userId) {
-    UserEntity userEntity = userRepository.findOne(userId);
-    List<String> projectIdList = new ArrayList<>();
-    for(ProjectUserMapping projectUserMapping:userEntity.getProjectUserMappings()){
-      projectIdList.add(projectUserMapping.getProject().getProjectId());
-    }
-    List<Notify> notifyList = notifyRepository.getUserNotifications(projectIdList);
+//    UserEntity userEntity = userRepository.findOne(userId);
+//    List<String> projectIdList = new ArrayList<>();
+//    for(ProjectUserMapping projectUserMapping:userEntity.getProjectUserMappings()){
+//      projectIdList.add(projectUserMapping.getProject().getProjectId());
+//    }
+    List<Notify> notifyList = notifyRepository.getUserNotificationsById(userId);
     return notifyList;
   }
 
