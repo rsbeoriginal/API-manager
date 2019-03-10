@@ -1,5 +1,6 @@
 package com.apimanager.backend.controller;
 
+import com.apimanager.backend.dto.EndPointResponseFragmentDto;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.dto.UserWatchlistBulkRequestDTO;
@@ -36,6 +37,15 @@ public class WatchlistController {
 
   }
 
+  @PostMapping("/remove")
+  public ResponseDTO<UserWatchlistDTO> removeFromWatchList(@RequestBody RequestDTO<UserWatchlistRequestDTO> requestDTO) {
+    return watchlistService.removeFromWatchList(
+            requestDTO.getRequest().getFragmentPath(),
+            requestDTO.getRequest().getEndPointId(),
+            requestDTO.getRequest().getSubscriberId());
+
+  }
+
   @PostMapping("/addbulk")
   public ResponseDTO<List<UserWatchlistDTO>> addToWatchlistBulk(@RequestBody RequestDTO<UserWatchlistBulkRequestDTO> requestDTO) {
     String endpointId = requestDTO.getRequest().getEndPointId();
@@ -52,6 +62,12 @@ public class WatchlistController {
     response.setSuccess(true);
     response.setResponse(list);
     return response;
+  }
+
+  @PostMapping("/get")
+  public ResponseDTO<List<EndPointResponseFragmentDto>> get(@RequestBody RequestDTO<UserWatchlistRequestDTO> request) {
+    return watchlistService.getWatchList(request.getRequest().getEndPointId(),
+            request.getRequest().getSubscriberId());
   }
 
 }

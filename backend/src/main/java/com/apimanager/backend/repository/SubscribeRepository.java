@@ -22,4 +22,7 @@ public interface SubscribeRepository extends CrudRepository<UserSubscription,Str
 
   @Query("FROM UserSubscription WHERE (subscriber.userId = ?1 AND endPoint.id = ?2)")
   UserSubscription checkIfUserIsSubscribed(String userId, String endpointId);
+
+  long countByEndPoint(Endpoint endpoint);
+
 }

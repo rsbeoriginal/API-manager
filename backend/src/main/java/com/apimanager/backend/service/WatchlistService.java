@@ -1,7 +1,10 @@
 package com.apimanager.backend.service;
 
+import com.apimanager.backend.dto.EndPointResponseFragmentDto;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.dto.UserWatchlistDTO;
+
+import java.util.List;
 
 /**
  * @author jayjoshi
@@ -9,4 +12,6 @@ import com.apimanager.backend.dto.UserWatchlistDTO;
  */
 public interface WatchlistService {
   ResponseDTO<UserWatchlistDTO> addToWatchList(String fragmentPath, String endpointId, String userId);
+  ResponseDTO<UserWatchlistDTO> removeFromWatchList(String fragmentPath, String endpointId, String userId);
+  ResponseDTO<List<EndPointResponseFragmentDto>> getWatchList(String endpointId, String userId);
 }

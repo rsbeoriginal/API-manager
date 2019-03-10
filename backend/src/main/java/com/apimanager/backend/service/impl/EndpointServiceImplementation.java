@@ -10,6 +10,7 @@ import com.apimanager.backend.repository.ProjectUserRepository;
 import com.apimanager.backend.repository.SubscribeRepository;
 import com.apimanager.backend.repository.UserRepository;
 import com.apimanager.backend.service.EndpointService;
+import com.apimanager.backend.service.SubscribeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class EndpointServiceImplementation implements EndpointService {
   @Autowired
   UserRepository userRepository;
 
+  @Autowired
+  SubscribeService subscribeService;
+
   @Override
   @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public ResponseDTO<EndpointDTO> addEndpoint(Endpoint endpoint) throws Exception {
@@ -58,7 +62,6 @@ public class EndpointServiceImplementation implements EndpointService {
       EndpointDTO endpointDTO = new EndpointDTO();
       BeanUtils.copyProperties(endpoint,endpointDTO);
       UserEntity userEntity = userRepository.findOne(userId);
-//      if(checkIfUserIsAuthor(userId,endpointDTO.getProject().getProjectId())){
       boolean flag = false;
       for(ProjectUserMapping projectUserMapping : userEntity.getProjectUserMappings()){
         if(projectUserMapping.getProject().getProjectId().contains(projectId)){
@@ -76,6 +79,7 @@ public class EndpointServiceImplementation implements EndpointService {
       }else {
         endpointDTO.setSubscribed(false);
       }
+      endpointDTO.setCount(subscribeService.countSubscribesByEndpointId(endpoint));
       endpointDTOS.add(endpointDTO);
     }
     responseDTO.setResponse(endpointDTOS);

@@ -103,5 +103,10 @@ public class SubscribeServiceImpl implements SubscribeService {
 
   }
 
+  @Override
+  public int countSubscribesByEndpointId(Endpoint endpoint) {
+    return (int)subscribeRepository.countByEndPoint(endpoint);
+  }
+
 
 }
