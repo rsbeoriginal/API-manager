@@ -132,6 +132,11 @@ public class SubscribeServiceImpl implements SubscribeService {
   }
 
   @Override
+  public List<UserSubscription> getAllUserSubscriptionByEndpoint(String endpointId) {
+    return subscribeRepository.getAllUserSubscriptionByEndpoint(endpointId);
+  }
+
+  @Override
   public ResponseDTO<UserSubscriptionDto> renewSubscription(String subscriberId, String endPointId) {
 
     UserEntity user = userRepository.findOne(subscriberId);

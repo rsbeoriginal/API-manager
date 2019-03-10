@@ -3,6 +3,7 @@ package com.apimanager.backend.service;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.dto.UserSubscriptionDto;
 import com.apimanager.backend.entity.Endpoint;
+import com.apimanager.backend.entity.UserSubscription;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface SubscribeService {
   ResponseDTO<UserSubscriptionDto> subscribeToEndpoint(String userId, String endpointId);
   ResponseDTO<UserSubscriptionDto> unsubscribeToEndpoint(String userId, String endpointId);
   int countSubscribesByEndpointId(Endpoint endpoint);
-
+  List<UserSubscription> getAllUserSubscriptionByEndpoint(String endpointId);
   ResponseDTO<UserSubscriptionDto> renewSubscription(String subscriberId, String endPointId);
 }

@@ -2,8 +2,14 @@ package com.apimanager.backend.service.impl;
 
 import com.apimanager.backend.entity.EndPointResponseFragment;
 import com.apimanager.backend.entity.Endpoint;
+import com.apimanager.backend.entity.Notify;
+import com.apimanager.backend.entity.UserSubscription;
 import com.apimanager.backend.repository.EndPointResponseFragmentRepository;
 import com.apimanager.backend.service.EndPointResponseService;
+import com.apimanager.backend.service.EndpointService;
+import com.apimanager.backend.service.NotifyService;
+import com.apimanager.backend.service.SubscribeService;
+import com.apimanager.backend.service.WatchlistService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 /**
  * @author jayjoshi
@@ -28,6 +33,18 @@ import java.util.stream.Collectors;
 public class EndPointResponseServiceImpl implements EndPointResponseService {
   @Autowired
   private EndPointResponseFragmentRepository endPointResponseFragmentRepository;
+
+  @Autowired
+  private NotifyService notifyService;
+
+  @Autowired
+  private SubscribeService subscribeService;
+
+  @Autowired
+  private WatchlistService watchlistService;
+
+  @Autowired
+  private EndpointService endpointService;
 
   @Override
   public JSONObject fetchEndpointResponse(String endpointId) {
@@ -85,6 +102,7 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
   @Transactional(readOnly = false,propagation = Propagation.REQUIRES_NEW)
   public void insertEndpointResponse(String endpointId,JSONObject jsonObject) {
 
+
     jsonObject = cleanJSON(jsonObject);
 
     Endpoint endpoint = new Endpoint();
@@ -137,8 +155,19 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
       endPointResponseFragmentRepository.save(fragment);
     });
 
+    //get all usersubscription by endpoint id;
+    List<UserSubscription> userSubscriptions = subscribeService.getAllUserSubscriptionByEndpoint(endpointId);
+    for (UserSubscription userSubscription : userSubscriptions) {
+      Notify notify = new Notify();
+      notify.setEndpointId(endpointId);
+      notify.setNotificationType(Notify.TYPE_CHANGE);
+      notify.setExtraIdentifier(userSubscription.getSubscriber().getUserId());
+      notify.setProjectId(endpointService.getEndpoint(endpointId).getProject().getProjectId());
+      notifyService.sendNotification(notify);
+    }
 
-    List<String> paths = fragmentList.stream().map(fragment -> { return fragment.getAttributePath();}).collect(Collectors.toList());
+
+
   }
 
   public JSONObject cleanJSON(JSONObject jsonObject) {
