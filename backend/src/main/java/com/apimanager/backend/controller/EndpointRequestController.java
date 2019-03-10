@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
@@ -22,9 +24,12 @@ import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
 import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.EndpointRequest;
+import com.apimanager.backend.repository.EndpointRequestRepository;
+import com.apimanager.backend.repository.EndpointRequestStagingRepository;
 import com.apimanager.backend.repository.SubscribeRepository;
 import com.apimanager.backend.service.EndpointRequestService;
 import com.apimanager.backend.util.RequestUtil;
+import net.bytebuddy.implementation.auxiliary.AuxiliaryType;
 
 @RestController
 @RequestMapping(EndpointRequestController.BASE_PATH)
@@ -35,6 +40,12 @@ public class EndpointRequestController {
 
   @Autowired
   private SubscribeRepository subscribeRepository;
+
+  @Autowired
+  private EndpointRequestStagingRepository endpointRequestStagingRepository;
+
+  @Autowired
+  private EntityManager em;
 
   public static final String BASE_PATH = "/endpointRequest";
 
@@ -106,6 +117,7 @@ public class EndpointRequestController {
       //endpointRequestService.deleteStaging(endpointId);
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
         if(type.equals("param")) {
+          endpointRequestStagingRepository.deleteTypeParam(endpointId);
           JSONObject jsonObject = new JSONObject(requestDTO.getRequest());
           Iterator<String> keys = jsonObject.keys();
           while (keys.hasNext()) {
@@ -122,6 +134,7 @@ public class EndpointRequestController {
             list.add(endpointRequestService.addEndpointRequestToStagingArea(endpointRequest));
           }
         } else {
+          endpointRequestStagingRepository.deleteTypeBody(endpointId);
           EndpointRequest endpointRequest = new EndpointRequest();
           JSONObject jsonObject = convertHashMapToJsonObjectForBodyType(requestDTO.getRequest());
           String jsonString = jsonObject.toString();
@@ -185,6 +198,7 @@ public class EndpointRequestController {
     List<EndpointRequestDTO> list = new ArrayList<>();
     try {
       if (RequestUtil.verifyToken(requestDTO.getTokenId())) {
+        System.out.println("entered here");
         EndpointRequestUserDTO endpointRequestUserDTO = new EndpointRequestUserDTO();
         endpointRequestUserDTO.setSubscribedVersion(endpointRequestService.getEndpointRequestByUserId(endpointId,userId));
         endpointRequestUserDTO.setCurrentVersion(endpointRequestService.getCurrentVersionEndpointRequest(endpointId));

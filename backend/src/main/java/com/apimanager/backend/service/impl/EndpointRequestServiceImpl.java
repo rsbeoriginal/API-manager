@@ -130,11 +130,14 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
       endpointRequestDTOS.add(endpointRequestDTO);
       count++;
     }
-    if (endpointRequestStagings.size() != 0) {
-      Endpoint endpoint = endpointRespository.findOne(endpointId);
+    System.out.println(maxVersion);
+    Endpoint endpoint = endpointRespository.findOne(endpointId);
+    if(count==1) {
+      endpoint.setCurrentVersion(maxVersion+1);
+    }else {
       endpoint.setCurrentVersion(maxVersion);
-      endpointRespository.save(endpoint);
     }
+    endpointRespository.save(endpoint);
     Notify notify = new Notify();
     notify.setEndpointId(endpointId);
     notify.setNotificationType(Notify.TYPE_CHANGE);
@@ -165,9 +168,11 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   }
 
   @Override
-  public List<EndpointRequestDTO> getEndpointRequestByUserId(String endpointId, String userId) {
+  public List<EndpointRequestDTO> getEndpointRequestByUserId(String endpointId, String userId) throws Exception{
+    System.out.println("entered inside getEndpointRequest");
     int subscribedVersion =
-        subscribeRepository.findUserSubscriptionBySubscriptionIdAndEndPoint(userId, endpointId).getSubscribedVersion();
+        subscribeRepository.selectUserSubscriptionBySubscriptionIdAndEndPoint(userId, endpointId).getSubscribedVersion();
+    System.out.println(subscribedVersion);
     return getEndpointRequestByVersion(endpointId,subscribedVersion);
   }
 
@@ -175,8 +180,9 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
   //for user
   @Override
   public List<EndpointRequestDTO> getCurrentVersionEndpointRequest(String endpointId) throws Exception {
+      int version = endpointRespository.findOne(endpointId).getCurrentVersion();
       List<EndpointRequestDTO> endpointRequestDTOS = new ArrayList<>();
-      List<EndpointRequest> endpointRequests = endpointRequestRepository.selectEndpointRequestByEndpointId(endpointId);
+      List<EndpointRequest> endpointRequests = endpointRequestRepository.selectEndpointRequestByEndpointIdAndVersion(endpointId,version);
       for (EndpointRequest endpointRequest : endpointRequests) {
         EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
         BeanUtils.copyProperties(endpointRequest, endpointRequestDTO);
