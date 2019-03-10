@@ -20,6 +20,8 @@ public class NotifyDTO {
   boolean markAsRead;
   String extraIdentifier;
   String notifyMessage;
+  String projectName;
+  String endpointPath;
 
   public String getNotifyId() {
     return notifyId;
@@ -105,5 +107,21 @@ public class NotifyDTO {
         return MSG_DEFAULT;
     }
     return null;
+  }
+
+  public String getProjectName() {
+    return projectName;
+  }
+
+  public void setProjectName(String projectName) {
+    this.projectName = projectName;
+  }
+
+  public String getEndpointPath() {
+    return endpointPath;
+  }
+
+  public void setEndpointPath(String endpointPath) {
+    this.endpointPath = endpointPath;
   }
 }

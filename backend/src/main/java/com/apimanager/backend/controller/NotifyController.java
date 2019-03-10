@@ -3,7 +3,9 @@ package com.apimanager.backend.controller;
 import com.apimanager.backend.dto.NotifyDTO;
 import com.apimanager.backend.dto.RequestDTO;
 import com.apimanager.backend.dto.ResponseDTO;
+import com.apimanager.backend.entity.Endpoint;
 import com.apimanager.backend.entity.Notify;
+import com.apimanager.backend.repository.EndpointRepository;
 import com.apimanager.backend.service.NotifyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class NotifyController {
 
   @Autowired
   NotifyService notifyService;
+
+  @Autowired
+  EndpointRepository endpointRepository;
 
   @PostMapping("/addNotification")
   public ResponseDTO<Notify> addNotification(@RequestBody RequestDTO<Notify> requestDTO){
@@ -44,7 +49,10 @@ public class NotifyController {
       for (Notify notify: notifyList) {
         NotifyDTO notifyDTO = new NotifyDTO();
         BeanUtils.copyProperties(notify,notifyDTO);
+        Endpoint endpoint = endpointRepository.findOne(notifyDTO.getEndpointId());
         notifyDTO.setNotifyMessage(notifyDTO.generateMessageByType(notify.getNotificationType()));
+        notifyDTO.setProjectName(endpoint.getProject().getProjectName());
+        notifyDTO.setEndpointPath(endpoint.getEndpointPath());
         notifyDTOList.add(notifyDTO);
       }
       responseDTO.setResponse(notifyDTOList);

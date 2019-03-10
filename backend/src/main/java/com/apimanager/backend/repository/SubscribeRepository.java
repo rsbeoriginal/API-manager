@@ -16,7 +16,8 @@ public interface SubscribeRepository extends CrudRepository<UserSubscription,Str
   List<UserSubscription> findAllBySubscriber(UserEntity subsciber);
 
   //by user_id and endpoint_id fetch, current version
-  UserSubscription findUserSubscriptionBySubscriptionIdAndEndPoint(String subscriptionId, String endpointId);
+  @Query(value = "select * from user_subscription where subscriber=?1 and endpoint=?2",nativeQuery = true)
+  UserSubscription selectUserSubscriptionBySubscriptionIdAndEndPoint(String subscriberId, String endpointId);
 
   UserSubscription findAllBySubscriberAndEndPoint(UserEntity subscriber, Endpoint endpoint);
 

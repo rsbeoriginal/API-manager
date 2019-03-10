@@ -20,13 +20,16 @@ public interface EndpointRequestStagingRepository extends CrudRepository<Endpoin
 
   @Query(value = "delete from endpoint_request_staging where endpoint_id=?1 and type='body'",nativeQuery = true)
   @Modifying
-  void deleteTypeBody(String id);
+  @Transactional
+  int deleteTypeBody(String id);
 
   @Query(value = "delete from endpoint_request_staging where endpoint_id=?1 and type='param'",nativeQuery = true)
   @Modifying
-  void deleteTypeParam(String id);
+  @Transactional
+  int deleteTypeParam(String id);
 
   @Query(value = "delete from endpoint_request_staging where endpoint_id=?1",nativeQuery = true)
   @Transactional
+  @Modifying
   int deleteStaging(String endpointId);
 }

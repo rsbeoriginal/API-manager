@@ -23,7 +23,7 @@ public interface EndpointRequestService {
 
   List<EndpointRequestDTO> getEndpointRequestByVersion(String endpointId, int version);
 
-  List<EndpointRequestDTO> getEndpointRequestByUserId(String endpointId, String userId);
+  List<EndpointRequestDTO> getEndpointRequestByUserId(String endpointId, String userId) throws Exception;
 
   //for user
   List<EndpointRequestDTO> getCurrentVersionEndpointRequest(String endpointId) throws Exception;
