@@ -1,5 +1,6 @@
 package com.apimanager.backend.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,15 +23,15 @@ public class Endpoint {
   private String id;
   private String endpointPath;
   private String requestMethod;
-  @OneToOne
+  @OneToOne(cascade= CascadeType.ALL)
   @JoinColumn(name = "created_by")
   private UserEntity createdBy;
   private long createdTimestamp;
-  @OneToOne
+  @OneToOne(cascade=CascadeType.ALL)
   @JoinColumn(name = "updated_by")
   private UserEntity updatedBy;
   private long updatedTimestamp;
-  @ManyToOne
+  @ManyToOne(cascade=CascadeType.ALL)
   @JoinColumn(name = "project_id")
   private Project project;
   private int currentVersion;

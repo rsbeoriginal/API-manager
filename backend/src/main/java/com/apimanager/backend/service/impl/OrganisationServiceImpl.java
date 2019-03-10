@@ -32,6 +32,7 @@ public class OrganisationServiceImpl implements OrganisationService {
   @Autowired
   OrganisationUserRepository organisationUserRepository;
 
+
   @Override
   public Organisation addOrganisation(Organisation organisation) {
     organisation = organisationRepository.save(organisation);
@@ -41,7 +42,8 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public List<Organisation> getUserOrganisation(String userId) {
-    return organisationRepository.getUserOrganisation(userId);
+    List<String> organisationIds = organisationUserRepository.getOrganisationIds(userId);
+    return organisationRepository.getOrganisationListbyIds(organisationIds);
   }
 
   public ResponseDTO<OrganisationUserMappingDto> addNewUserToOrg(String userEmail, String organisationId, String currentUser) {
