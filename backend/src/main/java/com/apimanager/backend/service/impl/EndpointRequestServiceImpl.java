@@ -169,7 +169,10 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
     for (EndpointRequest endpointRequest : endpointRequests) {
       EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
       BeanUtils.copyProperties(endpointRequest, endpointRequestDTO);
-      endpointRequestDTOS.add(endpointRequestDTO);
+      if(endpointRequestDTO.getType().equals("body")){
+        endpointRequestDTOS.add(0,endpointRequestDTO);
+      }else{
+        endpointRequestDTOS.add(endpointRequestDTO);}
     }
 
     return endpointRequestDTOS;
@@ -194,7 +197,10 @@ public class EndpointRequestServiceImpl implements EndpointRequestService {
       for (EndpointRequest endpointRequest : endpointRequests) {
         EndpointRequestDTO endpointRequestDTO = new EndpointRequestDTO();
         BeanUtils.copyProperties(endpointRequest, endpointRequestDTO);
-        endpointRequestDTOS.add(endpointRequestDTO);
+        if(endpointRequestDTO.getType().equals("body")){
+          endpointRequestDTOS.add(0,endpointRequestDTO);
+        }else{
+          endpointRequestDTOS.add(endpointRequestDTO);}
       }
     return endpointRequestDTOS;
   }
