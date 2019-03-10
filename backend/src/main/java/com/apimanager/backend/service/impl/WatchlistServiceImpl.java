@@ -174,7 +174,7 @@ public class WatchlistServiceImpl implements WatchlistService {
               EndPointResponseFragmentDto dto = new EndPointResponseFragmentDto();
               BeanUtils.copyProperties(entity,dto);
               dto.setEndPointId(entity.getEndPoint().getId());
-              dto.setChanged(dbObj.getHash().equals(entity.getHash()));
+              dto.setChanged( (!dbObj.getHash().equals(entity.getHash())) || entity.isMarkedForDelete() );
               return dto;
             }).collect(Collectors.toList());
 
