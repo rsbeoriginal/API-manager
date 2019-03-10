@@ -88,7 +88,7 @@ public class EndPointResponseServiceImpl implements EndPointResponseService {
     jsonObject = cleanJSON(jsonObject);
 
     Endpoint endpoint = new Endpoint();
-    //endpoint.setId(endpointId);
+    endpoint.setId(endpointId);
 
     endPointResponseFragmentRepository.markForDelete(endpointId);
 
