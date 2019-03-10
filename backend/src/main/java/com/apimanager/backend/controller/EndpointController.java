@@ -1,5 +1,6 @@
 package com.apimanager.backend.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,8 @@ public class EndpointController {
         System.out.println(requestDTO.getRequest());
         System.out.println(endpoint);
         endpoint.setCurrentVersion(1);
+        endpoint.setCreatedTimestamp(new Date().getTime());
+        endpoint.setUpdatedTimestamp((new Date().getTime()));
         responseDTO = endpointService.addEndpoint(endpoint);
       } else {
         responseDTO = new ResponseDTO<>();
